@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四季展厅 | 四时中国</title>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/seasons.css">
+  <link rel="stylesheet" href="./css/unified.css">
+</head>
+<body data-page="seasons">
+  <div id="appHeader"></div>
+  <main>
+    <section class="page-hero" style="--hero-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Lotus_flower_%28978659%29.jpg/1280px-Lotus_flower_%28978659%29.jpg')">
+      <div class="hero-copy">
+        <p class="eyebrow">Four Seasons Gallery</p>
+        <h1>四季展厅</h1>
+        <p class="lead">春生、夏长、秋收、冬藏。每一季都包含六个节气，也包含一套关于身体、农事、礼制与诗意的经验。</p>
+      </div>
+    </section>
+    <section class="content-section">
+      <div class="section-heading">
+        <h2>四季主线</h2>
+        <p>先理解季节，再进入节气细节。这样时间不会散成二十四个孤立节点。</p>
+      </div>
+      <div class="grid-4 season-gallery" id="seasonGallery"></div>
+    </section>
+    <section class="content-section">
+      <div class="section-heading">
+        <p class="eyebrow">Scenic Seasons</p>
+        <h2>中国名胜里的四季</h2>
+        <p>把节气从抽象日期带回真实风景：湖山、梯田、园林、雪后宫城都可以成为四时的入口。</p>
+      </div>
+      <div class="grid-3 scenic-gallery" id="scenicGallery"></div>
+    </section>
+  </main>
+  <div id="appFooter"></div>
+  <script src="./js/data.js"></script>
+  <script src="./js/common.js"></script>
+  <script>window.SeasonApp.renderSeasons();</script>
+</body>
+</html>

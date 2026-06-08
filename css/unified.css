@@ -1,0 +1,421 @@
+:root {
+  --font-body: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-display: "STKaiti", "KaiTi", "Songti SC", serif;
+  --page-max: 1480px;
+  --read-max: 820px;
+  --section-y: clamp(56px, 7vw, 96px);
+  --section-x: clamp(18px, 5vw, 72px);
+  --surface: color-mix(in srgb, var(--panel) 90%, transparent);
+  --surface-soft: color-mix(in srgb, var(--paper) 78%, transparent);
+  --panel-gradient:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--paper) 82%, transparent));
+  --soft-shadow: 0 14px 34px rgba(37, 45, 42, 0.08);
+  --lift-shadow: 0 22px 54px rgba(37, 45, 42, 0.12);
+}
+
+:root.dark {
+  --surface: color-mix(in srgb, var(--panel) 92%, transparent);
+  --surface-soft: color-mix(in srgb, var(--paper) 72%, transparent);
+  --soft-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
+  --lift-shadow: 0 24px 62px rgba(0, 0, 0, 0.34);
+}
+
+body {
+  padding-top: var(--header-height, 72px);
+  font-family: var(--font-body);
+  opacity: 0;
+  background:
+    radial-gradient(circle at 12% 6%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 28%),
+    radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--green) 8%, transparent), transparent 28%),
+    linear-gradient(135deg, var(--paper), color-mix(in srgb, var(--green) 8%, var(--paper)) 52%, color-mix(in srgb, var(--gold) 9%, var(--paper)));
+  transition: opacity 0.18s ease, filter 0.18s ease;
+}
+
+.site-header {
+  position: fixed;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  flex-shrink: 0;
+  transform: translateY(0);
+  transition:
+    left 0.4s ease,
+    right 0.4s ease,
+    border-color 0.35s ease,
+    border-radius 0.4s ease,
+    box-shadow 0.35s ease,
+    background 0.35s ease,
+    opacity 0.28s ease,
+    transform 0.4s ease,
+    filter 0.18s ease;
+}
+
+:root.nav-mounted .site-header {
+  opacity: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+:root.nav-entering .site-header {
+  animation: navDropIn 0.54s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+:root.nav-mounted body {
+  opacity: 1;
+  filter: none;
+}
+
+.site-header.is-scrolled,
+:root.nav-mounted .site-header.is-scrolled {
+  top: 0;
+  left: clamp(12px, 3vw, 34px);
+  right: clamp(12px, 3vw, 34px);
+  transform: translateY(12px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+  box-shadow: var(--shadow);
+}
+
+:root.page-leaving body {
+  opacity: 0;
+  filter: blur(4px);
+}
+
+:root.page-leaving .site-header {
+  opacity: 0;
+  filter: blur(4px);
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(-18px);
+}
+
+@keyframes navDropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+:root.dark body {
+  background:
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--red) 18%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--blue) 14%, transparent), transparent 30%),
+    linear-gradient(135deg, #111514, #18211f 56%, #221d17);
+}
+
+body[data-page="seasons"],
+body[data-page="terms"],
+body[data-page="stories"],
+body[data-page="ganzhi"],
+body[data-page="calculator"],
+body[data-page="quiz"] {
+  background:
+    radial-gradient(circle at 12% 6%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 28%),
+    radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--green) 8%, transparent), transparent 28%),
+    linear-gradient(135deg, var(--paper), color-mix(in srgb, var(--green) 8%, var(--paper)) 52%, color-mix(in srgb, var(--gold) 9%, var(--paper)));
+}
+
+:root.dark body[data-page="seasons"],
+:root.dark body[data-page="terms"],
+:root.dark body[data-page="stories"],
+:root.dark body[data-page="ganzhi"],
+:root.dark body[data-page="calculator"],
+:root.dark body[data-page="quiz"] {
+  background:
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--red) 18%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--blue) 14%, transparent), transparent 30%),
+    linear-gradient(135deg, #111514, #18211f 56%, #221d17);
+}
+
+.content-section {
+  width: 100%;
+  max-width: var(--page-max);
+  padding: var(--section-y) var(--section-x);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 86%, transparent);
+}
+
+.content-section:last-of-type {
+  border-bottom: 0;
+}
+
+.section-heading {
+  max-width: var(--read-max);
+  margin-bottom: clamp(28px, 5vw, 54px);
+}
+
+.section-heading h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.25vw, 3.35rem);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: 0.03em;
+}
+
+.section-heading p {
+  font-size: 0.98rem;
+  line-height: 1.86;
+}
+
+.page-hero {
+  min-height: clamp(380px, 52vh, 600px);
+  padding: clamp(54px, 8vw, 104px) var(--section-x);
+  border-bottom: 1px solid var(--line);
+}
+
+body:not([data-page="home"]) .page-hero .hero-copy {
+  max-width: 820px;
+}
+
+body:not([data-page="home"]) .page-hero h1 {
+  max-width: none;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6.2vw, 5.8rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: 0.06em;
+}
+
+body:not([data-page="home"]) .page-hero .lead {
+  max-width: 760px;
+  font-size: clamp(1rem, 1.35vw, 1.12rem);
+}
+
+body[data-page="stories"] .stories-hero,
+body[data-page="ganzhi"] .ganzhi-hero {
+  min-height: clamp(430px, 56vh, 620px);
+  place-items: center;
+}
+
+body[data-page="stories"] .story-hero-copy,
+body[data-page="ganzhi"] .ganzhi-hero-copy {
+  max-width: 860px;
+  text-align: center;
+}
+
+body[data-page="stories"] .story-hero-copy h1,
+body[data-page="ganzhi"] .ganzhi-hero-copy h1 {
+  font-size: clamp(3.1rem, 6.7vw, 6.2rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+body[data-page="calculator"] .page-hero,
+body[data-page="quiz"] .page-hero {
+  min-height: clamp(360px, 46vh, 540px);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 94%, transparent) 0 52%, transparent),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--red) 10%, transparent), transparent 30%),
+    linear-gradient(135deg, color-mix(in srgb, var(--green) 10%, var(--paper)), color-mix(in srgb, var(--gold) 9%, var(--paper)));
+}
+
+body[data-page="seasons"] .page-hero,
+body[data-page="terms"] .page-hero {
+  min-height: clamp(380px, 48vh, 560px);
+}
+
+:root.dark body[data-page="calculator"] .page-hero,
+:root.dark body[data-page="quiz"] .page-hero {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 96%, transparent) 0 52%, transparent),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--red) 16%, transparent), transparent 30%),
+    linear-gradient(135deg, #15201d, #211d17);
+}
+
+.card,
+.story-item,
+.line-display-panel,
+.reader-content,
+.timeline-focus,
+.glossary-card,
+.game-menu-intro,
+.game-card,
+.reward-card,
+.calendar-summary,
+.query-card,
+.time-card,
+.soft-card,
+body[data-page="ganzhi"] .flow-card,
+body[data-page="ganzhi"] .calculator-card,
+body[data-page="ganzhi"] .ganzhi-grid-box,
+body[data-page="ganzhi"] .cycle-panel,
+body[data-page="ganzhi"] .season-branch-card,
+body[data-page="ganzhi"] .record-item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-gradient), var(--surface);
+  box-shadow: var(--soft-shadow);
+}
+
+.card,
+.story-item,
+.glossary-card,
+.game-menu button,
+.flow-card,
+.cell-jiazi,
+.term-flow a,
+.answers button,
+.game-pill {
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.card:hover,
+.story-item:hover,
+.glossary-card:hover,
+body[data-page="ganzhi"] .flow-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--lift-shadow);
+}
+
+.button,
+.ghost-button,
+.pill-btn,
+.control-btn,
+.terms-toolbar button,
+.glossary-filters button,
+.story-subnav a,
+.story-subnav button,
+.calendar-summary-flow span,
+.calendar-tags span,
+.chip {
+  border-radius: 999px;
+}
+
+.ghost-button,
+.terms-toolbar button,
+.glossary-filters button,
+body[data-page="ganzhi"] .pill-btn,
+body[data-page="ganzhi"] .control-btn {
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+}
+
+.button,
+.terms-toolbar button.active,
+.glossary-filters button.active,
+.line-tabs button.active,
+.game-route button.active,
+.game-menu button.active,
+body[data-page="ganzhi"] .cell-jiazi.highlight {
+  color: #fff8e9;
+  border-color: var(--red);
+  background: var(--red);
+}
+
+.line-tabs button:not(.active),
+.game-menu button:not(.active),
+.game-route button:not(.active),
+.answers button,
+.game-pill,
+body[data-page="ganzhi"] .cell-jiazi {
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  box-shadow: none;
+}
+
+.reader-quote,
+.poem-card blockquote,
+.reward-card blockquote,
+.detail-panel blockquote {
+  font-family: var(--font-display);
+  border-left-color: var(--red);
+}
+
+body[data-page="quiz"] .game-stage-meta h2,
+body[data-page="quiz"] .game-card h2,
+body[data-page="calculator"] .query-card h2,
+body[data-page="calculator"] .calendar-summary h2,
+body[data-page="calculator"] .time-card h2,
+body[data-page="seasons"] .card h3,
+body[data-page="terms"] .card h3,
+body[data-page="home"] .card h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+body[data-page="stories"] .line-tabs button:not(.active),
+body[data-page="stories"] .reader-content,
+body[data-page="stories"] .timeline-focus,
+body[data-page="stories"] .glossary-card,
+body[data-page="quiz"] .game-menu button,
+body[data-page="quiz"] .game-route,
+body[data-page="quiz"] .game-card,
+body[data-page="calculator"] .calendar-summary,
+body[data-page="calculator"] .query-card,
+body[data-page="calculator"] .calendar-result .card {
+  background: var(--panel-gradient), var(--surface);
+}
+
+body[data-page="stories"] .line-tabs button.active,
+body[data-page="stories"] .line-tabs button.active strong,
+body[data-page="stories"] .line-tabs button.active .local-icon {
+  color: #fff8e9;
+}
+
+body[data-page="stories"] .line-tabs button.active {
+  border-color: var(--red);
+  background: var(--red);
+}
+
+body[data-page="stories"] .line-tabs button.active > span {
+  color: rgba(255, 248, 233, 0.72);
+}
+
+body[data-page="seasons"] .season-card,
+body[data-page="terms"] .term-card,
+body[data-page="home"] .route-card {
+  min-height: 100%;
+}
+
+body[data-page="seasons"] .season-card img,
+body[data-page="seasons"] .scenic-card img,
+body[data-page="terms"] .term-card img {
+  height: clamp(190px, 18vw, 240px);
+}
+
+@media (max-width: 780px) {
+  .site-header,
+  .site-header.is-scrolled,
+  :root.nav-mounted .site-header.is-scrolled {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    transform: translateY(0);
+    border-radius: 0;
+  }
+
+  .content-section {
+    padding-block: clamp(46px, 9vw, 68px);
+  }
+
+  body:not([data-page="home"]) .page-hero h1,
+  body[data-page="stories"] .story-hero-copy h1,
+  body[data-page="ganzhi"] .ganzhi-hero-copy h1 {
+    font-size: clamp(2.45rem, 12vw, 4rem);
+    letter-spacing: 0.05em;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(1.9rem, 8vw, 2.6rem);
+  }
+
+  .card:hover,
+  .story-item:hover,
+  .glossary-card:hover,
+  body[data-page="ganzhi"] .flow-card:hover {
+    transform: none;
+  }
+}

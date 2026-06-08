@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四时中国 | 首页</title>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/unified.css">
+</head>
+<body data-page="home">
+  <div id="appHeader"></div>
+  <main>
+    <section class="page-hero portal-hero">
+      <div class="season-backdrop" id="seasonBoard" aria-label="四季背景分区"></div>
+      <canvas id="season-particles" class="season-particles" aria-hidden="true"></canvas>
+    </section>
+    <section class="portal-stats">
+      <article><strong>4</strong><p>四季是全年叙事的主轴。</p></article>
+      <article><strong>24</strong><p>节气对应太阳黄经节点。</p></article>
+      <article><strong>60</strong><p>六十甲子构成循环时间。</p></article>
+      <article id="todayCard"><strong>今日</strong><p>自动显示今日近节气与干支。</p></article>
+    </section>
+    <section class="content-section">
+      <div class="section-heading">
+        <p class="eyebrow">Explore</p>
+        <h2>项目入口</h2>
+        <p>每个页面只承担一个任务，避免元素堆叠和信息混乱。</p>
+      </div>
+      <div class="grid-4" id="seasonPreview"></div>
+    </section>
+  </main>
+  <div id="appFooter"></div>
+  <script src="./js/data.js"></script>
+  <script src="./js/common.js"></script>
+  <script>window.SeasonApp.renderHome();</script>
+</body>
+</html>

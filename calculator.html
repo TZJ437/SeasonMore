@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四时日历 | 四时中国</title>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/ganzhi.css">
+  <link rel="stylesheet" href="./css/unified.css">
+</head>
+<body data-page="calculator">
+  <div id="appHeader"></div>
+  <main>
+    <section class="page-hero calculator-hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Calendar</p>
+        <h1>四时日历</h1>
+        <p class="lead">选一个日期，把它放回季节、节气、干支和风物之中，看这一天在传统时间里处于什么位置。</p>
+      </div>
+    </section>
+    <section class="content-section calculator-guide">
+      <div class="calendar-steps">
+        <article><strong>01</strong><span>选日期</span><p>把一个具体日子放进传统时间。</p></article>
+        <article><strong>02</strong><span>读干支</span><p>看纪年、生肖和干支日。</p></article>
+        <article><strong>03</strong><span>找节气</span><p>定位前后节气和季节节奏。</p></article>
+        <article><strong>04</strong><span>接风物</span><p>用诗词、故事和地点收束理解。</p></article>
+      </div>
+    </section>
+
+    <section class="content-section calculator-workbench">
+      <form class="card query-card" id="queryForm">
+        <div class="card-body">
+          <p class="eyebrow">Pick A Day</p>
+          <h2>选择日期</h2>
+          <p>年份用于常用干支纪年，日期用于判断附近节气和干支日。</p>
+          <label for="dateInput">日期</label>
+          <input id="dateInput" type="date">
+          <label for="yearInput">年份</label>
+          <input id="yearInput" type="number" min="-3000" max="3000">
+          <div class="quick-links">
+            <button class="button" type="submit">查看这一天</button>
+            <button class="ghost-button" id="todayButton" type="button">回到今天</button>
+          </div>
+        </div>
+      </form>
+      <div id="resultPanel"></div>
+    </section>
+  </main>
+  <div id="appFooter"></div>
+  <script src="./js/data.js"></script>
+  <script src="./js/common.js"></script>
+  <script src="./js/calculator.js"></script>
+</body>
+</html>

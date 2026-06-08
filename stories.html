@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>典籍故事 | 四时中国</title>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/stories.css">
+  <link rel="stylesheet" href="./css/unified.css">
+</head>
+<body data-page="stories">
+  <div id="appHeader"></div>
+  <main>
+    <section class="page-hero stories-hero" style="--hero-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Along_the_River_During_the_Qingming_Festival_%28Qing_Court_Version%29_08.jpg/1280px-Along_the_River_During_the_Qingming_Festival_%28Qing_Court_Version%29_08.jpg')">
+      <div class="hero-copy story-hero-copy">
+        <p class="eyebrow">Chinese Timeline Literature</p>
+        <h1>典籍故事</h1>
+        <span class="story-hero-rule"></span>
+        <p class="lead">从《月令》到天文历法、物候观察与岁时礼俗，把厚重典籍化成一条可停、可读、可回看的四时线索。</p>
+        <nav class="story-subnav" aria-label="典籍故事页内导航">
+          <button type="button" data-scroll-target="reading-map">阅读地图</button>
+          <button type="button" data-scroll-target="reader">典籍岁时记</button>
+          <button type="button" data-scroll-target="timeline">知识流变</button>
+          <button type="button" data-scroll-target="glossary">概念词典</button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="content-section story-section" id="reading-map">
+      <div class="section-heading story-heading">
+        <p class="eyebrow">I. Reading Map</p>
+        <h2>以四线索，观四时变迁</h2>
+        <p>节气与岁时不是孤立数据。先选择一个维度，页面只呈现一页核心内容，让天文、物候、农事与礼俗各自安静地说清楚。</p>
+      </div>
+      <div class="line-tabs" id="storyLineTabs"></div>
+      <div class="line-display-panel" id="storyLinePanel"></div>
+    </section>
+
+    <section class="content-section story-section" id="reader">
+      <div class="section-heading story-heading">
+        <p class="eyebrow">II. Interactive Reader</p>
+        <h2>典籍岁时记</h2>
+        <p>左侧选择章节，右侧只展开一篇。把原文线索、科普解释和今日生活分开呈现，避免信息同时涌入。</p>
+      </div>
+      <div class="reader-layout">
+        <aside class="reader-nav" id="storyReaderNav" aria-label="典籍章节"></aside>
+        <article class="reader-content" id="storyReaderContent"></article>
+      </div>
+    </section>
+
+    <section class="content-section story-section" id="timeline">
+      <div class="section-heading story-heading">
+        <p class="eyebrow">III. Chronology Slider</p>
+        <h2>四时知识的流动</h2>
+        <p>时间知识并非一蹴而就。点击历代节点，看节气如何在自然观察、历法制度与日常生活之间转化。</p>
+      </div>
+      <div class="timeline-control">
+        <div class="timeline-rail" aria-hidden="true">
+          <span id="storyTimelineProgress"></span>
+        </div>
+        <div class="timeline-steps" id="storyTimelineSteps"></div>
+      </div>
+      <div class="timeline-focus" id="storyTimelineFocus"></div>
+    </section>
+
+    <section class="content-section story-section" id="glossary">
+      <div class="story-glossary-head">
+        <div class="section-heading story-heading">
+          <p class="eyebrow">IV. Compact Glossary</p>
+          <h2>概念极简词典</h2>
+          <p>把背景剥离，只留下阅读其他页面时最常用的骨架定义。可按类别快速筛选。</p>
+        </div>
+        <div class="glossary-filters" id="storyGlossaryFilters" aria-label="筛选概念分类"></div>
+      </div>
+      <div class="glossary-grid" id="storyGlossary"></div>
+    </section>
+  </main>
+  <div id="appFooter"></div>
+  <script src="./js/data.js"></script>
+  <script src="./js/common.js"></script>
+  <script>window.SeasonApp.renderStoriesPage();</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天干地支 | 四时中国</title>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/ganzhi.css">
+  <link rel="stylesheet" href="./css/unified.css">
+</head>
+<body data-page="ganzhi">
+  <div id="appHeader"></div>
+  <main>
+    <section class="page-hero ganzhi-hero">
+      <div class="hero-copy ganzhi-hero-copy">
+        <p class="eyebrow">Ganzhi</p>
+        <h1>天干地支</h1>
+        <p class="lead">不息的齿轮咬合，构成华夏文明精密的时间尺度。这里抛开硬背，以更直观的现代眼光触碰古人经天纬地的数学智慧。</p>
+      </div>
+    </section>
+
+    <section class="content-section ganzhi-guide">
+      <div class="section-heading">
+        <p class="eyebrow">Framework</p>
+        <h2>极简干支结构</h2>
+        <p>干支不只是纪时名词，更是一套数字配对模型。先把握天干、地支、甲子三层关系，再进入年份与节气。</p>
+      </div>
+      <div class="ganzhi-flow">
+        <article class="flow-card">
+          <span class="num">01</span>
+          <h3>天干 · 极性线索</h3>
+          <p>甲、乙、丙、丁、戊、己、庚、辛、壬、癸。十个符号依次循环，并与阴阳、五行一起构成时间的上层序列。</p>
+        </article>
+        <article class="flow-card">
+          <span class="num">02</span>
+          <h3>地支 · 地面刻度</h3>
+          <p>子、丑、寅、卯、辰、巳、午、未、申、酉、戌、亥。十二个符号连接月份、时辰、方位与生肖。</p>
+        </article>
+        <article class="flow-card">
+          <span class="num">03</span>
+          <h3>六十甲子 · 咬合自流</h3>
+          <p>十天干与十二地支依次相配，最小公倍数为六十。六十步往复一轮，被称为一甲子。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-heading">
+        <p class="eyebrow">Interactive Calculator</p>
+        <h2>干支纪年与甲子盘</h2>
+        <p>输入年份，即刻在右侧甲子盘中定位并点亮该年份的干支位置，感知它在六十循环中的精密坐标。</p>
+      </div>
+      <div class="ganzhi-layout">
+        <aside class="calculator-card">
+          <label for="yearInput">输入公历年份</label>
+          <div class="year-control">
+            <input id="yearInput" type="number" min="-3000" max="3000">
+          </div>
+          <div class="seal-container">
+            <div class="seal" id="yearSeal">丙午</div>
+          </div>
+          <div class="explain-text" id="yearExplain"></div>
+        </aside>
+
+        <section class="ganzhi-grid-box">
+          <div class="grid-box-header">
+            <h3>六十甲子总表</h3>
+            <div class="filter-pills" id="jiaziFilters"></div>
+          </div>
+          <div class="jiazi-table" id="ganzhiTable"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-heading">
+        <p class="eyebrow">Step Navigation</p>
+        <h2>甲子序数之流转</h2>
+        <p>用步进轮盘细看每一个干支。点击前进或后退，感受天干与地支交错前行的秩序。</p>
+      </div>
+      <div class="cycle-panel">
+        <div class="cycle-dial-container">
+          <svg class="dial-svg" viewBox="0 0 280 280" aria-hidden="true">
+            <circle class="dial-track" cx="140" cy="140" r="130"></circle>
+            <circle class="dial-progress" id="dialProgress" cx="140" cy="140" r="130"></circle>
+          </svg>
+          <div class="dial-center-text">
+            <span class="num" id="dialIndex">01</span>
+            <span class="unit" id="dialName">甲子</span>
+          </div>
+        </div>
+        <div class="cycle-info">
+          <h3 id="cycleTitle">甲子 · 岁始首位</h3>
+          <p id="cycleDesc">甲为木之阳，子为水之阳。水木相生，藏着严寒之下万物复苏的初萌动力。</p>
+          <div class="cycle-controls">
+            <button class="control-btn" id="prevCycleBtn" type="button">溯源上一步</button>
+            <button class="control-btn" id="nextCycleBtn" type="button">顺推下一步</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-heading">
+        <p class="eyebrow">Time Map</p>
+        <h2>地支月份与四季交融</h2>
+        <p>传统历法常以地支组织月份：春始于寅，夏盛于午，秋收于申，冬藏于子。四组卡片把月令与节气关系收束起来。</p>
+      </div>
+      <div class="month-season-container" id="monthBranchMap"></div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-heading">
+        <p class="eyebrow">Ancient Texts</p>
+        <h2>典籍线索</h2>
+        <p>干支并非凭空而来。历代文献里，它始终与王朝秩序、天文观测和天人之辨相互缠绕。</p>
+      </div>
+      <div class="records-grid" id="recordList"></div>
+    </section>
+  </main>
+  <div id="appFooter"></div>
+  <script src="./js/data.js"></script>
+  <script src="./js/common.js"></script>
+  <script>window.SeasonApp.renderGanzhiPage();</script>
+</body>
+</html>
