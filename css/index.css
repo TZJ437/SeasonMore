@@ -237,6 +237,44 @@
   margin-top: -12px;
 }
 
+.home-learning-route {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-learning-route a {
+  display: grid;
+  gap: 10px;
+  min-height: 190px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-gradient), var(--surface);
+  box-shadow: var(--soft-shadow);
+}
+
+.home-learning-route span {
+  color: var(--red);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+}
+
+.home-learning-route strong {
+  font-family: var(--font-display);
+  font-size: 1.28rem;
+}
+
+.home-learning-route small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
 @media (max-width: 1120px) {
   .portal-hero {
     height: auto;
@@ -258,6 +296,10 @@
   .portal-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .home-learning-route {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 620px) {
@@ -270,6 +312,10 @@
   }
 
   .portal-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .home-learning-route {
     grid-template-columns: 1fr;
   }
 }
@@ -416,8 +462,9 @@
   background: rgba(20, 30, 28, 0.24);
   box-shadow: 0 18px 46px rgba(0, 0, 0, 0.18);
   cursor: pointer;
+  font-family: var(--font-display);
   font-size: 1.15rem;
-  font-weight: 950;
+  font-weight: 700;
   backdrop-filter: blur(16px);
   transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
@@ -436,13 +483,72 @@
   left: clamp(18px, 5vw, 74px);
   bottom: clamp(14px, 5vw, 66px);
   z-index: 2;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
   color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  font-family: var(--font-display);
   font-size: clamp(7rem, 17vw, 17rem);
-  font-weight: 950;
+  font-weight: 500;
   line-height: 0.76;
+  text-align: left;
   text-shadow: 0 28px 80px rgba(0, 0, 0, 0.18);
-  pointer-events: none;
-  transition: opacity 0.8s ease, transform 1.2s ease;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.8s ease, transform 1.2s ease, color 0.35s ease, filter 0.35s ease;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.season-wordmark:hover,
+.season-wordmark:focus-visible {
+  color: rgba(255, 255, 255, 0.86);
+  filter: drop-shadow(0 0 22px color-mix(in srgb, var(--scene-accent, #fff) 42%, transparent));
+  outline: 0;
+}
+
+.season-wordmark:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.1em;
+}
+
+.season-scene[data-season="春"] .season-wordmark {
+  color: rgba(248, 255, 241, 0.78);
+}
+
+.season-scene[data-season="夏"] .season-wordmark {
+  color: rgba(255, 248, 197, 0.78);
+}
+
+.season-scene[data-season="秋"] .season-wordmark {
+  color: rgba(255, 231, 193, 0.78);
+}
+
+.season-scene[data-season="冬"] .season-wordmark {
+  color: rgba(239, 249, 255, 0.82);
+}
+
+:root.dark .season-wordmark {
+  text-shadow: 0 24px 78px rgba(0, 0, 0, 0.44);
+}
+
+:root.dark .season-scene[data-season="春"] .season-wordmark {
+  color: rgba(193, 238, 210, 0.76);
+}
+
+:root.dark .season-scene[data-season="夏"] .season-wordmark {
+  color: rgba(210, 226, 255, 0.78);
+}
+
+:root.dark .season-scene[data-season="秋"] .season-wordmark {
+  color: rgba(241, 178, 122, 0.78);
+}
+
+:root.dark .season-scene[data-season="冬"] .season-wordmark {
+  color: rgba(218, 235, 255, 0.8);
 }
 
 .ink-poem {
@@ -559,6 +665,7 @@
 .season-scene:not(.active) .season-wordmark {
   opacity: 0;
   transform: translateY(28px);
+  pointer-events: none;
 }
 
 .season-scene:not(.active) .ink-poem {

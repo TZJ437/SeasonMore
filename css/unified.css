@@ -419,3 +419,947 @@ body[data-page="terms"] .term-card img {
     transform: none;
   }
 }
+
+/* Principles page: atlas layout. */
+body[data-page="principles"] .principles-hero {
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(260px, 34rem) minmax(280px, 1fr);
+  gap: clamp(26px, 6vw, 96px);
+  min-height: clamp(430px, 58vh, 660px);
+  padding-inline: max(var(--section-x), calc((100vw - var(--page-max)) / 2 + var(--section-x)));
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 94%, transparent) 0 46%, transparent 46%),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 7%, transparent) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 72px),
+    radial-gradient(circle at 78% 46%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 26%),
+    radial-gradient(circle at 76% 52%, color-mix(in srgb, var(--blue) 18%, transparent), transparent 42%),
+    linear-gradient(135deg, color-mix(in srgb, var(--green) 8%, var(--paper)), color-mix(in srgb, var(--gold) 7%, var(--paper)));
+}
+
+body[data-page="principles"] .principles-hero::before {
+  position: absolute;
+  content: "";
+  z-index: -1;
+  right: max(20px, calc((100vw - var(--page-max)) / 2 + 28px));
+  bottom: clamp(28px, 8vw, 86px);
+  width: min(46vw, 560px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--red) 54%, transparent), transparent);
+}
+
+body[data-page="principles"] .principles-hero .hero-copy {
+  justify-self: start;
+  width: min(100%, 34rem);
+  max-width: 100%;
+  min-width: 0;
+}
+
+body[data-page="principles"] .principles-hero h1 {
+  max-width: 100%;
+}
+
+body[data-page="principles"] .principles-hero .lead {
+  width: min(100%, 30rem);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-break: loose;
+  text-wrap: pretty;
+}
+
+body[data-page="principles"] .principle-orbit {
+  position: relative;
+  justify-self: center;
+  right: auto;
+  top: auto;
+  width: clamp(250px, 31vw, 460px);
+  border-color: color-mix(in srgb, var(--ink) 24%, transparent);
+  transform: rotate(-18deg);
+  transform-origin: center;
+  animation: principleOrbitDrift 64s linear infinite;
+  will-change: transform;
+}
+
+body[data-page="principles"] .principle-orbit span {
+  animation: principleOrbitSpin 42s linear infinite;
+}
+
+body[data-page="principles"] .principle-orbit::before {
+  box-shadow:
+    0 0 0 28px color-mix(in srgb, var(--ink) 3%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 18%, transparent);
+}
+
+body[data-page="principles"] .principle-orbit i {
+  animation: principlePlanetPulse 6s ease-in-out infinite;
+}
+
+body[data-page="principles"] .principle-orbit span::before,
+body[data-page="principles"] .principle-orbit span::after,
+body[data-page="principles"] .principle-orbit i::before,
+body[data-page="principles"] .principle-orbit i::after {
+  position: absolute;
+  content: "";
+  width: clamp(4px, 0.55vw, 8px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--gold) 78%, #fff8e9);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--gold) 54%, transparent);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+body[data-page="principles"] .principle-orbit span::before {
+  left: 15%;
+  top: 12%;
+  animation: principleParticleFloat 9s ease-in-out infinite;
+}
+
+body[data-page="principles"] .principle-orbit span::after {
+  right: 18%;
+  bottom: 13%;
+  width: clamp(3px, 0.42vw, 6px);
+  background: color-mix(in srgb, var(--blue) 70%, #fff8e9);
+  animation: principleParticleFloat 11s ease-in-out infinite reverse;
+}
+
+body[data-page="principles"] .principle-orbit i::before {
+  right: 145%;
+  top: 32%;
+  width: clamp(3px, 0.45vw, 6px);
+  background: color-mix(in srgb, var(--red) 70%, #fff8e9);
+  animation: principleParticleFloat 7.5s ease-in-out infinite;
+}
+
+body[data-page="principles"] .principle-orbit i::after {
+  left: 150%;
+  bottom: -55%;
+  width: clamp(4px, 0.5vw, 7px);
+  animation: principleParticleFloat 8.5s ease-in-out infinite reverse;
+}
+
+@keyframes principleOrbitSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes principleOrbitDrift {
+  from {
+    transform: rotate(-18deg);
+  }
+
+  to {
+    transform: rotate(342deg);
+  }
+}
+
+@keyframes principleOrbitDriftMobile {
+  from {
+    transform: translateY(-50%) rotate(-18deg);
+  }
+
+  to {
+    transform: translateY(-50%) rotate(342deg);
+  }
+}
+
+@keyframes principlePlanetPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: saturate(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+    filter: saturate(1.2);
+  }
+}
+
+@keyframes principleParticleFloat {
+  0%,
+  100% {
+    opacity: 0.34;
+    transform: translate3d(0, 0, 0) scale(0.82);
+  }
+
+  50% {
+    opacity: 0.92;
+    transform: translate3d(8px, -10px, 0) scale(1.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="principles"] .principle-orbit,
+  body[data-page="principles"] .principle-orbit span,
+  body[data-page="principles"] .principle-orbit i,
+  body[data-page="principles"] .principle-orbit span::before,
+  body[data-page="principles"] .principle-orbit span::after,
+  body[data-page="principles"] .principle-orbit i::before,
+  body[data-page="principles"] .principle-orbit i::after {
+    animation: none;
+  }
+}
+
+body[data-page="principles"] main {
+  counter-reset: principle-section;
+}
+
+body[data-page="principles"] main > .content-section {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(210px, 0.34fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: start;
+  padding-top: clamp(48px, 6vw, 84px);
+  padding-bottom: clamp(48px, 6vw, 84px);
+  counter-increment: principle-section;
+}
+
+body[data-page="principles"] main > .content-section::before {
+  position: absolute;
+  top: clamp(48px, 6vw, 84px);
+  left: var(--section-x);
+  content: "0" counter(principle-section);
+  color: color-mix(in srgb, var(--red) 52%, transparent);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+
+body[data-page="principles"] .section-heading {
+  position: sticky;
+  top: calc(var(--header-height, 72px) + 34px);
+  max-width: 360px;
+  margin: 0;
+  padding: 34px 0 0 20px;
+  border-left: 1px solid color-mix(in srgb, var(--red) 42%, var(--line));
+}
+
+body[data-page="principles"] .section-heading h2 {
+  font-size: clamp(1.78rem, 2.8vw, 3rem);
+  line-height: 1.18;
+}
+
+body[data-page="principles"] .section-heading p:last-child {
+  margin-bottom: 0;
+}
+
+body[data-page="principles"] .principle-grid,
+body[data-page="principles"] .calendar-compare,
+body[data-page="principles"] .region-grid,
+body[data-page="principles"] .myth-grid {
+  position: relative;
+  min-width: 0;
+}
+
+body[data-page="principles"] .principle-grid::before,
+body[data-page="principles"] .calendar-compare::before,
+body[data-page="principles"] .region-grid::before,
+body[data-page="principles"] .myth-grid::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: -18px;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--red) 58%, transparent), transparent);
+}
+
+body[data-page="principles"] .principle-grid {
+  grid-template-columns: minmax(230px, 1.25fr) repeat(2, minmax(180px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 36px),
+    color-mix(in srgb, var(--panel) 54%, transparent);
+}
+
+body[data-page="principles"] .principle-card,
+body[data-page="principles"] .calendar-compare article,
+body[data-page="principles"] .region-grid article,
+body[data-page="principles"] .myth-grid article {
+  min-height: 0;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+body[data-page="principles"] .principle-card {
+  padding: clamp(20px, 3vw, 32px);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 94%, transparent), color-mix(in srgb, var(--paper) 58%, transparent)),
+    color-mix(in srgb, var(--panel) 70%, transparent);
+}
+
+body[data-page="principles"] .principle-card.emphasis {
+  display: grid;
+  align-content: end;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 248, 233, 0.1) 0 1px, transparent 1px 32px),
+    linear-gradient(135deg, color-mix(in srgb, var(--red) 88%, #111), color-mix(in srgb, var(--green) 34%, var(--red)));
+}
+
+body[data-page="principles"] .principle-card strong {
+  margin-bottom: clamp(18px, 4vw, 34px);
+  font-size: clamp(3.2rem, 8vw, 7rem);
+  letter-spacing: 0;
+}
+
+body[data-page="principles"] .calendar-compare {
+  grid-template-columns: 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+body[data-page="principles"] .calendar-compare article {
+  display: grid;
+  grid-template-columns: minmax(126px, 0.24fr) minmax(190px, 0.34fr) minmax(0, 1fr);
+  gap: clamp(14px, 3vw, 26px);
+  align-items: start;
+  padding: clamp(18px, 2.8vw, 28px);
+  border: 0;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--green) 8%, transparent), transparent 44%),
+    color-mix(in srgb, var(--panel) 88%, transparent);
+}
+
+body[data-page="principles"] .calendar-compare article + article {
+  border-top: 1px solid var(--line);
+}
+
+body[data-page="principles"] .calendar-compare span,
+body[data-page="principles"] .myth-grid span {
+  align-self: start;
+  margin: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--red) 8%, transparent);
+}
+
+body[data-page="principles"] .calendar-compare h3 {
+  margin: 0;
+}
+
+body[data-page="principles"] .region-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+body[data-page="principles"] .region-grid article {
+  display: grid;
+  grid-template-columns: minmax(118px, 0.22fr) minmax(0, 1fr);
+  gap: clamp(14px, 3vw, 28px);
+  align-items: start;
+  padding: clamp(18px, 2.8vw, 28px);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--blue) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--panel) 86%, transparent);
+}
+
+body[data-page="principles"] .region-grid h3 {
+  margin: 0;
+  color: var(--red);
+}
+
+body[data-page="principles"] .myth-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body[data-page="principles"] .myth-grid article {
+  position: relative;
+  min-height: 210px;
+  padding: clamp(20px, 3vw, 30px);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--gold) 9%, transparent), transparent 58%),
+    color-mix(in srgb, var(--panel) 88%, transparent);
+}
+
+body[data-page="principles"] .myth-grid article::after {
+  position: absolute;
+  content: "";
+  left: clamp(20px, 3vw, 30px);
+  right: clamp(20px, 3vw, 30px);
+  bottom: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--red) 42%, transparent), transparent);
+}
+
+body[data-page="principles"] .learning-steps {
+  position: relative;
+  grid-template-columns: repeat(6, minmax(112px, 1fr));
+  gap: 10px;
+  padding-top: 22px;
+}
+
+body[data-page="principles"] .learning-steps::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--red), color-mix(in srgb, var(--green) 52%, transparent), transparent);
+}
+
+body[data-page="principles"] .learning-steps a {
+  min-height: 188px;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+body[data-page="principles"] .learning-steps a:hover {
+  border-color: color-mix(in srgb, var(--red) 34%, var(--line));
+}
+
+/* Calculator and quiz pages: shared tool-console layout. */
+body[data-page="calculator"],
+body[data-page="quiz"] {
+  --tool-panel: color-mix(in srgb, var(--panel) 82%, transparent);
+  --tool-panel-strong: color-mix(in srgb, var(--panel) 94%, transparent);
+  --tool-line: color-mix(in srgb, var(--ink) 16%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--paper) 94%, var(--green)), color-mix(in srgb, var(--paper) 92%, var(--gold))),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 4%, transparent) 0 1px, transparent 1px 42px);
+}
+
+body[data-page="calculator"] .page-hero,
+body[data-page="quiz"] .page-hero {
+  isolation: isolate;
+  min-height: clamp(280px, 36vh, 430px);
+  padding-block: clamp(42px, 6vw, 76px);
+  padding-inline: max(var(--section-x), calc((100vw - var(--page-max)) / 2 + var(--section-x)));
+  align-items: end;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 18%, transparent), transparent 72%),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 8%, transparent) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 52px),
+    linear-gradient(110deg, color-mix(in srgb, var(--green) 14%, var(--paper)), color-mix(in srgb, var(--gold) 12%, var(--paper)) 58%, color-mix(in srgb, var(--blue) 10%, var(--paper)));
+}
+
+body[data-page="calculator"] .page-hero::before,
+body[data-page="quiz"] .page-hero::before {
+  position: absolute;
+  content: "";
+  z-index: -1;
+  inset: auto max(var(--section-x), calc((100vw - var(--page-max)) / 2 + var(--section-x))) clamp(28px, 5vw, 52px);
+  height: 12px;
+  border-block: 1px solid color-mix(in srgb, var(--red) 44%, transparent);
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--red) 56%, transparent) 0 2px, transparent 2px 38px);
+}
+
+body[data-page="calculator"] .page-hero .hero-copy,
+body[data-page="quiz"] .page-hero .hero-copy {
+  max-width: 860px;
+  padding-left: clamp(16px, 3vw, 30px);
+  border-left: 3px solid var(--red);
+}
+
+body[data-page="calculator"] .page-hero h1,
+body[data-page="quiz"] .page-hero h1 {
+  font-size: clamp(2.7rem, 5.6vw, 5.2rem);
+  letter-spacing: 0.04em;
+}
+
+body[data-page="calculator"] .page-hero .lead,
+body[data-page="quiz"] .page-hero .lead {
+  max-width: 720px;
+}
+
+body[data-page="calculator"] .calculator-guide,
+body[data-page="quiz"] .quiz-intro {
+  padding-top: clamp(26px, 4vw, 44px);
+  padding-bottom: clamp(22px, 3vw, 36px);
+}
+
+body[data-page="quiz"] .quiz-intro .section-heading {
+  max-width: var(--page-max);
+  margin: 0;
+  padding: clamp(18px, 3vw, 26px);
+  border: 1px solid var(--tool-line);
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--green) 9%, transparent), transparent 48%),
+    var(--tool-panel);
+}
+
+body[data-page="quiz"] .quiz-intro .section-heading h2 {
+  font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+}
+
+body[data-page="quiz"] .quiz-intro .section-heading p:last-child {
+  margin-bottom: 0;
+}
+
+body[data-page="calculator"] .calendar-steps {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-radius: 6px;
+  background: var(--tool-line);
+}
+
+body[data-page="calculator"] .calendar-steps article {
+  position: relative;
+  min-height: 132px;
+  padding: clamp(16px, 2.2vw, 22px);
+  background:
+    linear-gradient(180deg, var(--tool-panel-strong), var(--tool-panel)),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 4%, transparent) 0 1px, transparent 1px 32px);
+}
+
+body[data-page="calculator"] .calendar-steps article::after {
+  position: absolute;
+  content: "";
+  left: clamp(16px, 2.2vw, 22px);
+  right: clamp(16px, 2.2vw, 22px);
+  bottom: 14px;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--red) 44%, transparent), transparent);
+}
+
+body[data-page="calculator"] .calendar-steps strong {
+  font-size: 1.28rem;
+}
+
+body[data-page="calculator"] .calendar-steps span {
+  margin-top: 16px;
+}
+
+body[data-page="calculator"] .calculator-workbench,
+body[data-page="quiz"] .quiz-box {
+  max-width: var(--page-max);
+  padding-top: clamp(28px, 4vw, 54px);
+}
+
+body[data-page="calculator"] .calculator-workbench {
+  grid-template-columns: minmax(270px, 330px) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 34px);
+}
+
+body[data-page="quiz"] .quiz-layout {
+  grid-template-columns: minmax(270px, 330px) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 34px);
+}
+
+body[data-page="calculator"] .query-card,
+body[data-page="quiz"] .game-menu {
+  top: calc(var(--header-height, 72px) + 28px);
+}
+
+body[data-page="calculator"] .query-card,
+body[data-page="quiz"] .game-menu-intro,
+body[data-page="quiz"] .game-menu button,
+body[data-page="quiz"] .game-route,
+body[data-page="quiz"] .game-card,
+body[data-page="quiz"] .reward-card,
+body[data-page="calculator"] .calendar-overview,
+body[data-page="calculator"] .calendar-focus-card,
+body[data-page="calculator"] .poem-card,
+body[data-page="calculator"] .place-card {
+  border-color: var(--tool-line);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, var(--tool-panel-strong), var(--tool-panel)),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 4%, transparent) 0 1px, transparent 1px 34px);
+  box-shadow: none;
+}
+
+body[data-page="calculator"] .query-card,
+body[data-page="quiz"] .game-menu-intro {
+  border-top: 4px solid var(--red);
+}
+
+body[data-page="calculator"] .query-card .card-body {
+  display: grid;
+  gap: 10px;
+}
+
+body[data-page="calculator"] .query-card h2,
+body[data-page="quiz"] .game-menu-intro h2 {
+  font-size: clamp(1.55rem, 2.2vw, 2.2rem);
+}
+
+body[data-page="calculator"] .query-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+body[data-page="calculator"] .query-card label {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body[data-page="calculator"] .query-card input {
+  height: 46px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--paper) 62%, transparent);
+}
+
+body[data-page="calculator"] .query-card .quick-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 8px;
+}
+
+body[data-page="calculator"] .query-card .button,
+body[data-page="calculator"] .query-card .ghost-button {
+  justify-content: center;
+  width: 100%;
+}
+
+body[data-page="quiz"] .game-menu {
+  gap: 8px;
+}
+
+body[data-page="quiz"] .game-menu button {
+  grid-template-columns: 42px minmax(0, 1fr);
+  min-height: 76px;
+  padding: 14px;
+}
+
+body[data-page="quiz"] .game-menu button i {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+}
+
+body[data-page="quiz"] .game-menu button:hover,
+body[data-page="quiz"] .answers button:hover,
+body[data-page="quiz"] .game-pill:hover {
+  transform: translateY(-1px);
+}
+
+body[data-page="quiz"] .game-menu button.active {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--red) 88%, #111), color-mix(in srgb, var(--green) 30%, var(--red)));
+}
+
+body[data-page="quiz"] .game-stage {
+  min-width: 0;
+  padding-left: clamp(0px, 1.5vw, 16px);
+  border-left: 1px solid color-mix(in srgb, var(--red) 26%, transparent);
+}
+
+body[data-page="quiz"] .game-route {
+  gap: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+body[data-page="quiz"] .game-route button {
+  min-height: 58px;
+  padding: 10px 8px;
+  background: var(--tool-panel);
+}
+
+body[data-page="quiz"] .game-stage-meta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  justify-content: start;
+}
+
+body[data-page="quiz"] .game-stage-meta h2 {
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+}
+
+body[data-page="quiz"] .game-card {
+  min-height: clamp(390px, 50vh, 610px);
+  padding: clamp(18px, 2.8vw, 30px);
+  border-top: 4px solid color-mix(in srgb, var(--green) 58%, var(--line));
+}
+
+body[data-page="quiz"] .game-card-head {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--tool-line);
+}
+
+body[data-page="quiz"] .answers button,
+body[data-page="quiz"] .game-pill {
+  min-height: 56px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+}
+
+body[data-page="quiz"] .puzzle-reference,
+body[data-page="quiz"] .puzzle-wrap {
+  border-color: var(--tool-line);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+body[data-page="quiz"] .puzzle-reference {
+  background: var(--tool-panel);
+}
+
+body[data-page="quiz"] .puzzle-complete-banner {
+  border-radius: 6px;
+}
+
+body[data-page="quiz"] .reward-card {
+  border-top: 4px solid var(--gold);
+}
+
+body[data-page="calculator"] .calendar-reading {
+  gap: clamp(12px, 2vw, 18px);
+}
+
+body[data-page="calculator"] .calendar-overview {
+  grid-template-columns: minmax(104px, 144px) minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 28px);
+  padding: clamp(18px, 3vw, 30px);
+  border-top: 4px solid var(--red);
+}
+
+body[data-page="calculator"] .calendar-overview-seal {
+  width: clamp(96px, 11vw, 136px);
+  height: clamp(96px, 11vw, 136px);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--paper) 54%, transparent);
+  transform: none;
+}
+
+body[data-page="calculator"] .calendar-overview-copy h2 {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+}
+
+body[data-page="calculator"] .calendar-summary-flow span,
+body[data-page="calculator"] .calendar-tags span {
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--paper) 58%, transparent);
+}
+
+body[data-page="calculator"] .calendar-dashboard {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 18px);
+}
+
+body[data-page="calculator"] .calendar-secondary-grid {
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(12px, 2vw, 18px);
+}
+
+body[data-page="calculator"] .calendar-focus-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+body[data-page="calculator"] .calendar-focus-card .card-body,
+body[data-page="calculator"] .poem-card .card-body,
+body[data-page="calculator"] .place-card .card-body {
+  padding: clamp(18px, 2.6vw, 28px);
+}
+
+body[data-page="calculator"] .calendar-focus-card h3,
+body[data-page="calculator"] .place-card h3 {
+  font-size: clamp(1.45rem, 2.1vw, 2.1rem);
+}
+
+body[data-page="calculator"] .query-facts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+body[data-page="calculator"] .query-facts span,
+body[data-page="calculator"] .term-flow a {
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--paper) 58%, transparent);
+}
+
+body[data-page="calculator"] .query-facts strong {
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+}
+
+body[data-page="calculator"] .term-flow {
+  gap: 8px;
+}
+
+body[data-page="calculator"] .term-flow a.current {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--red) 14%, transparent), transparent 52%),
+    color-mix(in srgb, var(--panel) 90%, transparent);
+}
+
+body[data-page="calculator"] .poem-card blockquote {
+  padding-left: 14px;
+}
+
+body[data-page="calculator"] .place-card {
+  overflow: hidden;
+}
+
+body[data-page="calculator"] .place-card img {
+  min-height: 260px;
+}
+
+:root.dark body[data-page="calculator"],
+:root.dark body[data-page="quiz"] {
+  --tool-panel: color-mix(in srgb, var(--panel) 82%, transparent);
+  --tool-panel-strong: color-mix(in srgb, var(--panel) 96%, transparent);
+  --tool-line: color-mix(in srgb, var(--ink) 18%, transparent);
+  background:
+    linear-gradient(135deg, #111514, #18211f 56%, #221d17),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 4%, transparent) 0 1px, transparent 1px 42px);
+}
+
+:root.dark body[data-page="calculator"] .page-hero,
+:root.dark body[data-page="quiz"] .page-hero {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 18%, transparent), transparent 72%),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 8%, transparent) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 52px),
+    linear-gradient(110deg, #14201d, #221f17 58%, #162331);
+}
+
+:root.dark body[data-page="principles"] .principles-hero {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 94%, transparent) 0 46%, transparent 46%),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 7%, transparent) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 72px),
+    radial-gradient(circle at 78% 46%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 26%),
+    radial-gradient(circle at 76% 52%, color-mix(in srgb, var(--blue) 20%, transparent), transparent 42%),
+    linear-gradient(135deg, #14201d, #161e26);
+}
+
+@media (max-width: 1120px) {
+  body[data-page="principles"] .learning-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body[data-page="calculator"] .calculator-workbench,
+  body[data-page="quiz"] .quiz-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="calculator"] .query-card,
+  body[data-page="quiz"] .game-menu {
+    position: static;
+  }
+
+  body[data-page="quiz"] .game-menu {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body[data-page="quiz"] .game-menu-intro {
+    grid-column: 1 / -1;
+  }
+
+  body[data-page="quiz"] .game-stage {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  body[data-page="principles"] .principles-hero {
+    grid-template-columns: 1fr;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--paper) 94%, transparent) 0 76%, transparent 76%),
+      repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 7%, transparent) 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 72px),
+      radial-gradient(circle at 78% 46%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 26%),
+      radial-gradient(circle at 76% 52%, color-mix(in srgb, var(--blue) 18%, transparent), transparent 42%),
+      linear-gradient(135deg, color-mix(in srgb, var(--green) 8%, var(--paper)), color-mix(in srgb, var(--gold) 7%, var(--paper)));
+  }
+
+  :root.dark body[data-page="principles"] .principles-hero {
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--paper) 94%, transparent) 0 76%, transparent 76%),
+      repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 7%, transparent) 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 72px),
+      radial-gradient(circle at 78% 46%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 26%),
+      radial-gradient(circle at 76% 52%, color-mix(in srgb, var(--blue) 20%, transparent), transparent 42%),
+      linear-gradient(135deg, #14201d, #161e26);
+  }
+
+  body[data-page="principles"] .principle-orbit {
+    position: absolute;
+    right: clamp(12px, 4vw, 42px);
+    top: 50%;
+    opacity: 0.22;
+    transform: translateY(-50%) rotate(-18deg);
+    animation-name: principleOrbitDriftMobile;
+  }
+
+  body[data-page="principles"] main > .content-section {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="principles"] .section-heading {
+    position: static;
+    max-width: var(--read-max);
+  }
+
+  body[data-page="principles"] .principle-grid,
+  body[data-page="principles"] .myth-grid,
+  body[data-page="calculator"] .calendar-dashboard,
+  body[data-page="calculator"] .calendar-secondary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="principles"] .calendar-compare article,
+  body[data-page="principles"] .region-grid article,
+  body[data-page="calculator"] .calendar-overview,
+  body[data-page="calculator"] .place-card {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="calculator"] .calendar-overview-seal {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 680px) {
+  body[data-page="principles"] .principle-orbit {
+    display: none;
+  }
+
+  body[data-page="principles"] .principles-hero .hero-copy {
+    width: min(100%, 20rem);
+  }
+
+  body[data-page="principles"] .principles-hero .lead {
+    width: min(100%, 18.5rem);
+  }
+
+  body[data-page="principles"] main > .content-section::before {
+    left: var(--section-x);
+  }
+
+  body[data-page="principles"] .section-heading {
+    padding-left: 16px;
+  }
+
+  body[data-page="principles"] .learning-steps,
+  body[data-page="quiz"] .game-menu,
+  body[data-page="quiz"] .game-route,
+  body[data-page="quiz"] .answers,
+  body[data-page="quiz"] .match-grid,
+  body[data-page="quiz"] .memory-grid,
+  body[data-page="quiz"] .sort-grid,
+  body[data-page="calculator"] .calendar-steps,
+  body[data-page="calculator"] .query-facts,
+  body[data-page="calculator"] .term-flow {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="calculator"] .page-hero .hero-copy,
+  body[data-page="quiz"] .page-hero .hero-copy {
+    padding-left: 14px;
+  }
+
+  body[data-page="quiz"] .game-stage-meta {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

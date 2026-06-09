@@ -1,0 +1,241 @@
+body[data-page="principles"] {
+  background:
+    radial-gradient(circle at 14% 8%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 30%),
+    linear-gradient(135deg, var(--paper), color-mix(in srgb, var(--green) 7%, var(--paper)) 54%, color-mix(in srgb, var(--blue) 8%, var(--paper)));
+}
+
+:root.dark body[data-page="principles"] {
+  background:
+    radial-gradient(circle at 14% 8%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 30%),
+    linear-gradient(135deg, #111514, #17211f 54%, #152028);
+}
+
+body[data-page="principles"] .principles-hero {
+  position: relative;
+  min-height: clamp(420px, 56vh, 640px);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 92%, transparent) 0 50%, transparent),
+    radial-gradient(circle at 72% 44%, color-mix(in srgb, var(--gold) 20%, transparent), transparent 26%),
+    radial-gradient(circle at 78% 48%, color-mix(in srgb, var(--blue) 20%, transparent), transparent 42%),
+    linear-gradient(135deg, color-mix(in srgb, var(--green) 10%, var(--paper)), color-mix(in srgb, var(--gold) 8%, var(--paper)));
+}
+
+:root.dark body[data-page="principles"] .principles-hero {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 94%, transparent) 0 50%, transparent),
+    radial-gradient(circle at 72% 44%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 26%),
+    radial-gradient(circle at 78% 48%, color-mix(in srgb, var(--blue) 22%, transparent), transparent 42%),
+    linear-gradient(135deg, #14201d, #161e26);
+}
+
+.principle-orbit {
+  position: absolute;
+  right: clamp(28px, 10vw, 180px);
+  top: 50%;
+  width: clamp(230px, 28vw, 410px);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 50%;
+  transform: translateY(-50%) rotate(-18deg);
+  opacity: 0.72;
+}
+
+.principle-orbit::before,
+.principle-orbit::after,
+.principle-orbit span,
+.principle-orbit i {
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+}
+
+.principle-orbit::before {
+  inset: 14%;
+  border: 1px dashed color-mix(in srgb, var(--red) 38%, transparent);
+}
+
+.principle-orbit::after {
+  left: 50%;
+  top: 50%;
+  width: 14%;
+  aspect-ratio: 1;
+  background: var(--gold);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 46px color-mix(in srgb, var(--gold) 58%, transparent);
+}
+
+.principle-orbit span {
+  inset: -7px;
+  border: 7px solid transparent;
+  border-top-color: var(--red);
+  border-right-color: color-mix(in srgb, var(--red) 34%, transparent);
+}
+
+.principle-orbit i {
+  right: 12%;
+  top: 23%;
+  width: 9%;
+  aspect-ratio: 1;
+  background: var(--blue);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--blue) 38%, transparent);
+}
+
+.principle-grid,
+.calendar-compare,
+.region-grid,
+.myth-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.principle-grid {
+  grid-template-columns: 1.25fr repeat(2, minmax(0, 1fr));
+}
+
+.calendar-compare,
+.region-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.myth-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.principle-card,
+.calendar-compare article,
+.region-grid article,
+.myth-grid article {
+  min-height: 240px;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-gradient), var(--surface);
+  box-shadow: var(--soft-shadow);
+}
+
+.principle-card.emphasis {
+  color: #fff8e9;
+  background:
+    radial-gradient(circle at 88% 14%, rgba(255, 248, 233, 0.18), transparent 34%),
+    linear-gradient(135deg, var(--red), color-mix(in srgb, var(--red) 74%, var(--ink)));
+}
+
+.principle-card strong {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--red);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 5.8rem);
+  font-weight: 500;
+  line-height: 0.9;
+}
+
+.principle-card.emphasis strong,
+.principle-card.emphasis p {
+  color: rgba(255, 248, 233, 0.86);
+}
+
+.principle-card h3,
+.calendar-compare h3,
+.region-grid h3,
+.myth-grid h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.3vw, 1.8rem);
+  font-weight: 600;
+}
+
+.principle-card p,
+.calendar-compare p,
+.region-grid p,
+.myth-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.84;
+}
+
+.calendar-compare span,
+.myth-grid span {
+  display: inline-flex;
+  margin-bottom: 20px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--red);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.region-grid article {
+  min-height: 260px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--green) 8%, transparent), transparent 54%),
+    var(--panel-gradient),
+    var(--surface);
+}
+
+.learning-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.learning-steps a {
+  display: grid;
+  gap: 12px;
+  min-height: 210px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-gradient), var(--surface);
+  box-shadow: var(--soft-shadow);
+}
+
+.learning-steps span {
+  color: var(--red);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+}
+
+.learning-steps strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+
+.learning-steps small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.72;
+}
+
+@media (max-width: 1080px) {
+  .principle-grid,
+  .calendar-compare,
+  .region-grid,
+  .myth-grid,
+  .learning-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .principle-orbit {
+    opacity: 0.28;
+  }
+}
+
+@media (max-width: 680px) {
+  .principle-grid,
+  .calendar-compare,
+  .region-grid,
+  .myth-grid,
+  .learning-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .principle-orbit {
+    display: none;
+  }
+}

@@ -14,13 +14,39 @@ const {
 
 const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
+const FALLBACK_TODAY = new Date(2026, 5, 9);
+const SAFE_YEAR_MIN = 1900;
+const SAFE_YEAR_MAX = 2100;
 
 function mod(n, m) {
   return ((n % m) + m) % m;
 }
 
+function cloneDate(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function isValidDate(date) {
+  return date instanceof Date && Number.isFinite(date.getTime());
+}
+
+function getSafeToday() {
+  const today = new Date();
+  const year = today.getFullYear();
+  if (!isValidDate(today) || year < SAFE_YEAR_MIN || year > SAFE_YEAR_MAX) {
+    return cloneDate(FALLBACK_TODAY);
+  }
+  return cloneDate(today);
+}
+
+function normalizeYear(value, fallback = getSafeToday().getFullYear()) {
+  const year = Number(value);
+  return Number.isFinite(year) ? Math.trunc(year) : Math.trunc(fallback);
+}
+
 function getGanzhiYear(year) {
-  const index = mod(year - 4, 60);
+  const safeYear = normalizeYear(year);
+  const index = mod(safeYear - 4, 60);
   return {
     index,
     name: `${stems[index % 10]}${branches[index % 12]}`,
@@ -30,17 +56,19 @@ function getGanzhiYear(year) {
   };
 }
 
-function getGanzhiDay(date = new Date()) {
+function getGanzhiDay(date = getSafeToday()) {
+  const safeDate = isValidDate(date) ? date : getSafeToday();
   const base = new Date(Date.UTC(2000, 0, 7));
-  const now = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  const now = Date.UTC(safeDate.getFullYear(), safeDate.getMonth(), safeDate.getDate());
   const days = Math.floor((now - base.getTime()) / 86400000);
   const index = mod(days, 60);
   return `${stems[index % 10]}${branches[index % 12]}`;
 }
 
-function getNearbyTerm(date = new Date()) {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+function getNearbyTerm(date = getSafeToday()) {
+  const safeDate = isValidDate(date) ? date : getSafeToday();
+  const month = safeDate.getMonth() + 1;
+  const day = safeDate.getDate();
   const anchors = [
     [2, 4, "立春"], [2, 19, "雨水"], [3, 6, "惊蛰"], [3, 21, "春分"],
     [4, 5, "清明"], [4, 20, "谷雨"], [5, 6, "立夏"], [5, 21, "小满"],
@@ -58,7 +86,7 @@ function getNearbyTerm(date = new Date()) {
   }).sort((a, b) => a.distance - b.distance)[0].name;
 }
 
-function getCurrentSeason(date = new Date()) {
+function getCurrentSeason(date = getSafeToday()) {
   const term = solarTerms.find((item) => item.name === getNearbyTerm(date)) || solarTerms[0];
   return seasons.find((season) => season.name === term.season) || seasons[0];
 }
@@ -236,6 +264,7 @@ function mountChrome() {
       <nav class="site-nav" aria-label="主导航">
         <a data-page="home" href="index.html">首页</a>
         <a data-page="seasons" href="seasons.html">四季</a>
+        <a data-page="principles" href="principles.html">原理</a>
         <a data-page="terms" href="solar-terms.html">节气图集</a>
         <a data-page="stories" href="stories.html">典籍故事</a>
         <a data-page="ganzhi" href="ganzhi.html">干支</a>
@@ -250,6 +279,7 @@ function mountChrome() {
     <footer class="site-footer">
       <p>节气日期为常见近似范围，精确时刻需按天文历算。</p>
       <div>
+        <a href="principles.html">理解节气原理</a>
         <a href="solar-terms.html">浏览二十四节气</a>
         <a href="stories.html">阅读典籍故事</a>
         <a href="calculator.html">查询干支与节气</a>
@@ -383,7 +413,7 @@ function setupSeasonHero() {
     "夏": {
       accent: "#2f82c9",
       type: "light",
-      count: 110,
+      count: 46,
       poems: [
         ["连雨不知春去，一晴方觉夏深。", "范成大《喜晴》"],
         ["小荷才露尖尖角，早有蜻蜓立上头。", "杨万里《小池》"],
@@ -418,6 +448,7 @@ function setupSeasonHero() {
     target: name === "春" ? 1 : 0,
     particles: []
   }]));
+  const bursts = [];
 
   let active = "春";
   let width = 0;
@@ -444,8 +475,8 @@ function setupSeasonHero() {
   function renderStage() {
     board.innerHTML = `
       ${names.map((name) => `
-        <section class="season-scene ${name === active ? "active" : ""}" data-season="${name}" aria-hidden="true">
-          <span class="season-wordmark">${name}</span>
+        <section class="season-scene ${name === active ? "active" : ""}" data-season="${name}" aria-hidden="${name === active ? "false" : "true"}">
+          <button class="season-wordmark" type="button" data-season-burst="${name}" aria-label="触发${name}季彩蛋">${name}</button>
           <div class="ink-poem is-writing">
             <span>${poemState[name].verse}</span>
             <small>${poemState[name].source}</small>
@@ -479,11 +510,11 @@ function setupSeasonHero() {
     if (type === "light") {
       particle.x = random(0, width);
       particle.y = fresh ? random(0, height) : random(height * 0.15, height * 1.05);
-      particle.vx = random(-12, 18);
-      particle.vy = random(-22, 10);
-      particle.size = random(1.1, 3.6);
-      particle.opacity = random(0.18, 0.58);
-      particle.radius = random(18, 58);
+      particle.vx = random(-8, 12);
+      particle.vy = random(-14, 8);
+      particle.size = random(0.8, 2.2);
+      particle.opacity = random(0.08, 0.24);
+      particle.radius = random(10, 30);
       return;
     }
 
@@ -529,24 +560,153 @@ function setupSeasonHero() {
     names.forEach(createParticles);
   }
 
-  function applySeason(name) {
+  function applySeason(name, options = {}) {
     if (!scenes[name]) return;
+    const sameSeason = active === name;
+    const refreshPoem = options.refreshPoem ?? !sameSeason;
     active = name;
     hero.dataset.season = name;
     hero.style.setProperty("--scene-accent", scenes[name].accent);
-    const poem = pickPoem(name);
+    const poem = refreshPoem ? pickPoem(name) : poemState[name];
     names.forEach((item) => {
       layers[item].target = item === name ? 1 : 0;
     });
-    $$(".season-scene", board).forEach((scene) => scene.classList.toggle("active", scene.dataset.season === name));
+    $$(".season-scene", board).forEach((scene) => {
+      const isActive = scene.dataset.season === name;
+      scene.classList.toggle("active", isActive);
+      scene.setAttribute("aria-hidden", isActive ? "false" : "true");
+      const wordmark = $(".season-wordmark", scene);
+      if (wordmark) {
+        wordmark.tabIndex = isActive ? 0 : -1;
+      }
+    });
     $$(".season-dock button", board).forEach((button) => button.classList.toggle("active", button.dataset.season === name));
     const poemNode = $(`.season-scene[data-season="${name}"] .ink-poem`, board);
-    if (poemNode) {
+    if (poemNode && poem) {
       $("span", poemNode).textContent = poem.verse;
       $("small", poemNode).textContent = poem.source;
-      poemNode.classList.remove("is-writing");
-      void poemNode.offsetWidth;
-      poemNode.classList.add("is-writing");
+      if (refreshPoem) {
+        poemNode.classList.remove("is-writing");
+        void poemNode.offsetWidth;
+        poemNode.classList.add("is-writing");
+      }
+    }
+  }
+
+  function burstOrigin(target) {
+    const heroRect = hero.getBoundingClientRect();
+    const targetRect = target?.getBoundingClientRect?.();
+    if (!targetRect) {
+      return { x: width * 0.25, y: height * 0.72 };
+    }
+    return {
+      x: targetRect.left + targetRect.width * 0.45 - heroRect.left,
+      y: targetRect.top + targetRect.height * 0.45 - heroRect.top
+    };
+  }
+
+  function addBurstParticle(type, x, y, options = {}) {
+    bursts.push({
+      type,
+      x,
+      y,
+      startX: x,
+      startY: y,
+      vx: options.vx ?? random(-80, 80),
+      vy: options.vy ?? random(-120, 80),
+      gravity: options.gravity ?? 60,
+      life: options.life ?? random(0.9, 1.6),
+      age: 0,
+      size: options.size ?? random(4, 12),
+      radius: options.radius ?? random(20, 80),
+      opacity: options.opacity ?? random(0.55, 0.95),
+      rotation: options.rotation ?? random(0, Math.PI * 2),
+      spin: options.spin ?? random(-3, 3),
+      sway: options.sway ?? random(18, 72),
+      color: options.color,
+      accent: options.accent
+    });
+  }
+
+  function triggerSeasonBurst(name, target) {
+    if (!scenes[name]) return;
+    applySeason(name, { refreshPoem: active !== name });
+
+    const origin = burstOrigin(target);
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const scale = reduced ? 0.45 : 1;
+
+    if (name === "春") {
+      const drops = Math.floor(34 * scale);
+      const leaves = Math.floor(20 * scale);
+      for (let index = 0; index < drops; index += 1) {
+        addBurstParticle("spring-drop", origin.x + random(-46, 52), origin.y + random(-24, 14), {
+          vx: random(-180, 110),
+          vy: random(180, 420),
+          gravity: random(250, 420),
+          life: random(0.65, 1.05),
+          size: random(1.3, 3.2),
+          opacity: random(0.38, 0.76)
+        });
+      }
+      for (let index = 0; index < leaves; index += 1) {
+        addBurstParticle("willow-leaf", origin.x + random(-24, 60), origin.y + random(-28, 20), {
+          vx: random(80, 240),
+          vy: random(-70, 90),
+          gravity: random(20, 80),
+          life: random(1.5, 2.5),
+          size: random(9, 18),
+          color: ["#79b46c", "#9fcf86", "#6fae75"][Math.floor(random(0, 3))]
+        });
+      }
+      return;
+    }
+
+    if (name === "夏") {
+      const lights = Math.floor(24 * scale);
+      for (let index = 0; index < lights; index += 1) {
+        const angle = random(0, Math.PI * 2);
+        const speed = random(28, 108);
+        addBurstParticle("summer-glow", origin.x + random(-22, 22), origin.y + random(-20, 20), {
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          gravity: random(-18, 18),
+          life: random(0.65, 1.15),
+          radius: random(10, 38),
+          size: random(1.1, 2.8),
+          opacity: random(0.18, 0.42)
+        });
+      }
+      return;
+    }
+
+    if (name === "秋") {
+      const leaves = Math.floor(42 * scale);
+      for (let index = 0; index < leaves; index += 1) {
+        addBurstParticle("maple-leaf", -40 + random(-80, 70), origin.y + random(-150, 120), {
+          vx: random(380, 660),
+          vy: random(-18, 170),
+          gravity: random(14, 80),
+          life: random(1.2, 2.2),
+          size: random(9, 22),
+          spin: random(-8, 8),
+          color: ["#c8472e", "#df7d2f", "#b9352d", "#e8a13e"][Math.floor(random(0, 4))]
+        });
+      }
+      return;
+    }
+
+    const blossoms = Math.floor(34 * scale);
+    for (let index = 0; index < blossoms; index += 1) {
+      addBurstParticle("plum-blossom", origin.x + random(-110, 120), -30 + random(-80, 20), {
+        vx: random(-46, 76),
+        vy: random(76, 170),
+        gravity: random(10, 48),
+        life: random(2, 3.2),
+        size: random(6, 14),
+        spin: random(-2.8, 2.8),
+        color: ["#f4b6c8", "#fff0f5", "#df789a"][Math.floor(random(0, 3))]
+      });
     }
   }
 
@@ -582,8 +742,8 @@ function setupSeasonHero() {
     ctx.save();
     ctx.globalAlpha = particle.opacity * alpha;
     const glow = ctx.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius);
-    glow.addColorStop(0, dark ? "rgba(190, 216, 255, 0.52)" : "rgba(255, 244, 170, 0.8)");
-    glow.addColorStop(0.28, dark ? "rgba(124, 160, 220, 0.22)" : "rgba(255, 222, 118, 0.28)");
+    glow.addColorStop(0, dark ? "rgba(190, 216, 255, 0.34)" : "rgba(255, 244, 170, 0.46)");
+    glow.addColorStop(0.28, dark ? "rgba(124, 160, 220, 0.14)" : "rgba(255, 222, 118, 0.14)");
     glow.addColorStop(1, dark ? "rgba(124, 160, 220, 0)" : "rgba(255, 222, 118, 0)");
     ctx.fillStyle = glow;
     ctx.beginPath();
@@ -635,11 +795,141 @@ function setupSeasonHero() {
     ctx.restore();
   }
 
+  function drawWillowLeaf(particle, alpha, dark) {
+    ctx.save();
+    ctx.translate(particle.x, particle.y);
+    ctx.rotate(particle.rotation);
+    ctx.globalAlpha = particle.opacity * alpha;
+    ctx.fillStyle = dark ? "rgba(160, 218, 168, 0.8)" : particle.color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, particle.size * 0.28, particle.size, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = dark ? "rgba(225, 255, 222, 0.42)" : "rgba(237, 255, 222, 0.58)";
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(0, -particle.size * 0.72);
+    ctx.lineTo(0, particle.size * 0.72);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawMapleLeaf(particle, alpha, dark) {
+    ctx.save();
+    ctx.translate(particle.x, particle.y);
+    ctx.rotate(particle.rotation);
+    ctx.globalAlpha = particle.opacity * alpha;
+    ctx.fillStyle = dark ? "rgba(231, 127, 74, 0.82)" : particle.color;
+    const s = particle.size;
+    ctx.beginPath();
+    ctx.moveTo(0, -s);
+    ctx.lineTo(s * 0.28, -s * 0.3);
+    ctx.lineTo(s * 0.92, -s * 0.58);
+    ctx.lineTo(s * 0.52, s * 0.02);
+    ctx.lineTo(s, s * 0.24);
+    ctx.lineTo(s * 0.28, s * 0.36);
+    ctx.lineTo(s * 0.14, s);
+    ctx.lineTo(0, s * 0.48);
+    ctx.lineTo(-s * 0.14, s);
+    ctx.lineTo(-s * 0.28, s * 0.36);
+    ctx.lineTo(-s, s * 0.24);
+    ctx.lineTo(-s * 0.52, s * 0.02);
+    ctx.lineTo(-s * 0.92, -s * 0.58);
+    ctx.lineTo(-s * 0.28, -s * 0.3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = dark ? "rgba(255, 220, 166, 0.3)" : "rgba(255, 226, 170, 0.42)";
+    ctx.lineWidth = 0.75;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPlumBlossom(particle, alpha, dark) {
+    ctx.save();
+    ctx.translate(particle.x, particle.y);
+    ctx.rotate(particle.rotation);
+    ctx.globalAlpha = particle.opacity * alpha;
+    const petal = particle.size * 0.42;
+    ctx.fillStyle = dark ? "rgba(255, 196, 216, 0.82)" : particle.color;
+    for (let index = 0; index < 5; index += 1) {
+      ctx.rotate((Math.PI * 2) / 5);
+      ctx.beginPath();
+      ctx.ellipse(0, -particle.size * 0.52, petal, particle.size * 0.62, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = dark ? "rgba(255, 224, 150, 0.82)" : "rgba(198, 128, 44, 0.72)";
+    ctx.beginPath();
+    ctx.arc(0, 0, Math.max(1.2, particle.size * 0.18), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawBurstParticle(particle, alpha, dark) {
+    if (particle.type === "spring-drop") {
+      ctx.save();
+      ctx.globalAlpha = particle.opacity * alpha;
+      ctx.strokeStyle = dark ? "rgba(154, 218, 218, 0.72)" : "rgba(205, 248, 234, 0.88)";
+      ctx.lineWidth = particle.size;
+      ctx.beginPath();
+      ctx.moveTo(particle.x, particle.y);
+      ctx.lineTo(particle.x - particle.vx * 0.018, particle.y + particle.size * 8);
+      ctx.stroke();
+      ctx.restore();
+      return;
+    }
+
+    if (particle.type === "summer-glow") {
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      ctx.globalAlpha = particle.opacity * alpha;
+      const glow = ctx.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius * (1 + particle.age));
+      glow.addColorStop(0, dark ? "rgba(208, 232, 255, 0.46)" : "rgba(255, 252, 176, 0.5)");
+      glow.addColorStop(0.24, dark ? "rgba(108, 158, 236, 0.14)" : "rgba(255, 224, 100, 0.16)");
+      glow.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.radius * (1 + particle.age), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      return;
+    }
+
+    if (particle.type === "willow-leaf") {
+      drawWillowLeaf(particle, alpha, dark);
+      return;
+    }
+
+    if (particle.type === "maple-leaf") {
+      drawMapleLeaf(particle, alpha, dark);
+      return;
+    }
+
+    drawPlumBlossom(particle, alpha, dark);
+  }
+
+  function drawBursts(dt, time) {
+    const dark = document.documentElement.classList.contains("dark");
+    for (let index = bursts.length - 1; index >= 0; index -= 1) {
+      const particle = bursts[index];
+      particle.age += dt;
+      if (particle.age >= particle.life) {
+        bursts.splice(index, 1);
+        continue;
+      }
+
+      const progress = particle.age / particle.life;
+      particle.x += particle.vx * dt + Math.sin(time * 0.004 + particle.startX) * particle.sway * dt;
+      particle.y += particle.vy * dt;
+      particle.vy += particle.gravity * dt;
+      particle.rotation += particle.spin * dt;
+      drawBurstParticle(particle, Math.max(0, 1 - progress), dark);
+    }
+  }
+
   function drawLayer(name, dt, time) {
     const layer = layers[name];
     layer.alpha += (layer.target - layer.alpha) * Math.min(1, dt * 3);
     if (layer.alpha < 0.01) return;
-    ctx.globalCompositeOperation = name === "夏" ? "lighter" : "source-over";
+    ctx.globalCompositeOperation = "source-over";
     const draw = {
       rain: drawRain,
       light: drawLight,
@@ -657,6 +947,7 @@ function setupSeasonHero() {
     lastTime = time;
     ctx.clearRect(0, 0, width, height);
     names.forEach((name) => drawLayer(name, dt, time));
+    drawBursts(dt, time);
     ctx.globalCompositeOperation = "source-over";
     rafId = requestAnimationFrame(tick);
   }
@@ -668,8 +959,14 @@ function setupSeasonHero() {
   tick();
 
   board.addEventListener("click", (event) => {
+    const burstButton = event.target.closest("button[data-season-burst]");
+    if (burstButton) {
+      triggerSeasonBurst(burstButton.dataset.seasonBurst, burstButton);
+      return;
+    }
+
     const button = event.target.closest("button[data-season]");
-    if (button) applySeason(button.dataset.season);
+    if (button) triggerSeasonBurst(button.dataset.season, button);
   });
   board.addEventListener("pointerover", (event) => {
     const button = event.target.closest("button[data-season]");
@@ -680,15 +977,17 @@ function setupSeasonHero() {
 
 function renderHome() {
   mountChrome();
-  const current = getCurrentSeason();
-  const near = getNearbyTerm();
-  const year = getGanzhiYear(new Date().getFullYear());
+  const today = getSafeToday();
+  const current = getCurrentSeason(today);
+  const near = getNearbyTerm(today);
+  const year = getGanzhiYear(today.getFullYear());
   $("#todayCard").innerHTML = `
     <strong>${current.title}</strong>
-    <span>近 ${near} · ${year.name}年 · ${getGanzhiDay()}日</span>
+    <span>近 ${near} · ${year.name}年 · ${getGanzhiDay(today)}日</span>
   `;
   const routes = [
     ["四季展厅", "seasons.html", "gallery-horizontal-end", "以春夏秋冬组织全年叙事。"],
+    ["节气原理", "principles.html", "orbit", "讲清太阳黄经、公历日期与农历差异。"],
     ["节气图集", "solar-terms.html", "images", "按季节筛选二十四节气图像与故事。"],
     ["典籍故事", "stories.html", "scroll-text", "从典籍、节俗与农事理解节气。"],
     ["天干地支", "ganzhi.html", "orbit", "理解六十甲子的循环时间。"],
@@ -853,6 +1152,19 @@ function renderStoriesPage() {
         <h3>${chapter.title}</h3>
         <p>${chapter.subtitle}</p>
       </header>
+      ${chapter.image ? `
+        <figure class="reader-visual">
+          <img src="${chapter.image}" alt="${chapter.imageAlt || chapter.title}">
+          ${chapter.imageNote ? `<figcaption>${chapter.imageNote}</figcaption>` : ""}
+        </figure>
+      ` : ""}
+      ${chapter.excerpt ? `
+        <section class="reader-excerpt">
+          <p class="eyebrow">原文摘句</p>
+          <blockquote>${chapter.excerpt}</blockquote>
+          ${chapter.plain ? `<p><strong>白话解释</strong>${chapter.plain}</p>` : ""}
+        </section>
+      ` : ""}
       <blockquote class="reader-quote">
         ${chapter.summary}
       </blockquote>
@@ -1074,7 +1386,7 @@ function renderGanzhiPage() {
   `).join("");
 
   const update = () => {
-    const year = Number($("#yearInput").value || new Date().getFullYear());
+    const year = normalizeYear($("#yearInput").value);
     const result = getGanzhiYear(year);
     const stemIndex = stems.indexOf(result.stem);
     const element = elementNames[stemIndex] || "火";
@@ -1098,7 +1410,7 @@ function renderGanzhiPage() {
   renderFilters();
   renderJiaziGrid();
   updateCycleDial(0);
-  $("#yearInput").value = new Date().getFullYear();
+  $("#yearInput").value = getSafeToday().getFullYear();
   $("#yearInput").addEventListener("input", update);
   $("#jiaziFilters")?.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-range]");
@@ -1125,7 +1437,9 @@ window.SeasonApp = {
   getGanzhiDay,
   getGanzhiYear,
   getNearbyTerm,
+  getSafeToday,
   mountChrome,
+  normalizeYear,
   renderGanzhiPage,
   renderHome,
   renderSeasons,

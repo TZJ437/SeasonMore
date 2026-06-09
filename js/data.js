@@ -7,7 +7,7 @@ const seasons = [
     range: "立春 - 谷雨",
     color: "#2f7a62",
     icon: "sprout",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Along_the_River_During_the_Qingming_Festival_%28Qing_Court_Version%29_08.jpg/960px-Along_the_River_During_the_Qingming_Festival_%28Qing_Court_Version%29_08.jpg",
+    image: "./images/photos/along-river-qingming.jpg",
     summary: "春令重在生发。雨水、雷声、花信与春耕共同打开一年的秩序。",
     keywords: ["迎春", "春耕", "花信", "踏青"]
   },
@@ -18,7 +18,7 @@ const seasons = [
     range: "立夏 - 大暑",
     color: "#c58d32",
     icon: "sun",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Lotus_flower_%28978659%29.jpg/960px-Lotus_flower_%28978659%29.jpg",
+    image: "./images/photos/lotus-flower.jpg",
     summary: "夏令重在繁盛。小满、芒种、夏至把农事与太阳高度推到一年中最醒目的位置。",
     keywords: ["麦熟", "插秧", "长日", "伏暑"]
   },
@@ -29,7 +29,7 @@ const seasons = [
     range: "立秋 - 霜降",
     color: "#a93f33",
     icon: "leaf",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Red_Maple_Leaves_in_Yahiko.JPG/960px-Red_Maple_Leaves_in_Yahiko.JPG",
+    image: "./images/photos/red-maple-leaves.jpg",
     summary: "秋令重在收敛。暑退、露寒、霜降让丰收、怀远与肃杀进入同一季节。",
     keywords: ["收获", "白露", "登高", "霜叶"]
   },
@@ -40,7 +40,7 @@ const seasons = [
     range: "立冬 - 大寒",
     color: "#2f6690",
     icon: "snowflake",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Temple_of_Heaven_-_Hall_of_Prayer_for_Good_Harvests_01_%28cropped%29.jpg/960px-Temple_of_Heaven_-_Hall_of_Prayer_for_Good_Harvests_01_%28cropped%29.jpg",
+    image: "./images/photos/temple-of-heaven-winter.jpg",
     summary: "冬令重在收藏。冬至一阳来复，严寒之中已经藏着下一轮春意。",
     keywords: ["冬藏", "祭天", "围炉", "阳生"]
   }
@@ -109,7 +109,7 @@ const scenicSpots = [
     name: "杭州西湖",
     season: "春",
     province: "浙江",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/West_Lake%2C_Hangzhou_%28Wanzi_Pavilion%29.jpg/960px-West_Lake%2C_Hangzhou_%28Wanzi_Pavilion%29.jpg",
+    image: "./images/photos/west-lake-hangzhou.jpg",
     source: "https://commons.wikimedia.org/wiki/File:West_Lake,_Hangzhou_(Wanzi_Pavilion).jpg",
     note: "湖山、柳色与春游传统相接，适合放在雨水、春分、清明语境中阅读。"
   },
@@ -117,7 +117,7 @@ const scenicSpots = [
     name: "黄山云海",
     season: "春",
     province: "安徽",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Mount-huangshan_53319729912.jpg/960px-Mount-huangshan_53319729912.jpg",
+    image: "./images/photos/mount-huangshan-clouds.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Mount-huangshan_53319729912.jpg",
     note: "山气、云雾、松石构成春夏之交的山水观看经验。"
   },
@@ -125,7 +125,7 @@ const scenicSpots = [
     name: "桂林漓江",
     season: "夏",
     province: "广西",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/1_li_jiang_guilin_yangshuo_2011.jpg/960px-1_li_jiang_guilin_yangshuo_2011.jpg",
+    image: "./images/photos/li-river-guilin.jpg",
     source: "https://commons.wikimedia.org/wiki/File:1_li_jiang_guilin_yangshuo_2011.jpg",
     note: "夏令水气充盈，江面、峰林与舟行构成南方暑季图像。"
   },
@@ -133,7 +133,7 @@ const scenicSpots = [
     name: "张家界",
     season: "夏",
     province: "湖南",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Zhangjiajie_National_Forest_Park.jpg/960px-Zhangjiajie_National_Forest_Park.jpg",
+    image: "./images/photos/zhangjiajie-forest.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Zhangjiajie_National_Forest_Park.jpg",
     note: "盛夏山林繁茂，云雾与峰柱让物候空间更有层次。"
   },
@@ -141,7 +141,7 @@ const scenicSpots = [
     name: "龙脊梯田",
     season: "夏",
     province: "广西",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Longji_Rice_Terraces_004.jpg/960px-Longji_Rice_Terraces_004.jpg",
+    image: "./images/photos/longji-rice-terraces.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Longji_Rice_Terraces_004.jpg",
     note: "芒种前后稻作节奏鲜明，梯田能把农事时间可视化。"
   },
@@ -149,7 +149,7 @@ const scenicSpots = [
     name: "九寨沟",
     season: "秋",
     province: "四川",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Jiuzhaigou_Sichuan_China_Jiuzhaigou-Tibetan-Mystery-Theater-07.jpg/960px-Jiuzhaigou_Sichuan_China_Jiuzhaigou-Tibetan-Mystery-Theater-07.jpg",
+    image: "./images/photos/jiuzhaigou-sichuan.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Jiuzhaigou_Sichuan_China_Jiuzhaigou-Tibetan-Mystery-Theater-07.jpg",
     note: "秋令水色与林色变化明显，适合表现白露、秋分后的清寒。"
   },
@@ -157,7 +157,7 @@ const scenicSpots = [
     name: "红枫叶",
     season: "秋",
     province: "秋景",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Red_Maple_Leaves_in_Yahiko.JPG/960px-Red_Maple_Leaves_in_Yahiko.JPG",
+    image: "./images/photos/red-maple-leaves.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Red_Maple_Leaves_in_Yahiko.JPG",
     note: "霜叶、红叶与秋令收敛感相连。"
   },
@@ -165,7 +165,7 @@ const scenicSpots = [
     name: "苏州狮子林",
     season: "秋",
     province: "江苏",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Lion_Grove_Garden_Suzhou_November_2017_009.jpg/960px-Lion_Grove_Garden_Suzhou_November_2017_009.jpg",
+    image: "./images/photos/lion-grove-garden-suzhou.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Lion_Grove_Garden_Suzhou_November_2017_009.jpg",
     note: "园林让秋令不只在山野，也进入城市与文人生活。"
   },
@@ -173,7 +173,7 @@ const scenicSpots = [
     name: "雪后故宫",
     season: "冬",
     province: "北京",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Forbidden_City_after_snow_%2820200106114845%29.jpg/960px-Forbidden_City_after_snow_%2820200106114845%29.jpg",
+    image: "./images/photos/forbidden-city-snow.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Forbidden_City_after_snow_(20200106114845).jpg",
     note: "冬雪与宫城礼制空间相遇，适合连接小雪、大雪与冬至。"
   },
@@ -181,7 +181,7 @@ const scenicSpots = [
     name: "天坛祈年殿",
     season: "冬",
     province: "北京",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Temple_of_Heaven_-_Hall_of_Prayer_for_Good_Harvests_01_%28cropped%29.jpg/960px-Temple_of_Heaven_-_Hall_of_Prayer_for_Good_Harvests_01_%28cropped%29.jpg",
+    image: "./images/photos/temple-of-heaven-winter.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Temple_of_Heaven_-_Hall_of_Prayer_for_Good_Harvests_01_(cropped).jpg",
     note: "冬至祭天把天文、历法与国家礼制连接到一起。"
   },
@@ -189,7 +189,7 @@ const scenicSpots = [
     name: "颐和园万寿山",
     season: "冬",
     province: "北京",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Longevity_Hill_of_the_Summer_Palace.jpg/960px-Longevity_Hill_of_the_Summer_Palace.jpg",
+    image: "./images/photos/longevity-hill-summer-palace.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Longevity_Hill_of_the_Summer_Palace.jpg",
     note: "北方园林在冬令中呈现山、湖、宫殿与寒色。"
   },
@@ -197,7 +197,7 @@ const scenicSpots = [
     name: "清明上河图局部",
     season: "春",
     province: "图像史",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Along_the_River_During_the_Qingming_Festival_%28Qing_Court_Version%29_08.jpg/960px-Along_the_River_During_the_Qingming_Festival_%28Qing_Court_Version%29_08.jpg",
+    image: "./images/photos/along-river-qingming.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Along_the_River_During_the_Qingming_Festival_(Qing_Court_Version)_08.jpg",
     note: "节气进入城市生活后，交通、贸易、祭扫与游赏都成为岁时图像。"
   },
@@ -205,7 +205,7 @@ const scenicSpots = [
     name: "春日油菜花",
     season: "春",
     province: "田野花信",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Rapeseed%20flowers%20%2853440491559%29.jpg?width=960",
+    image: "./images/photos/rapeseed-flowers.jpg",
     source: "https://commons.wikimedia.org/wiki/Category:Brassica_napus_(flowers)",
     note: "成片油菜花把春分、清明前后的花信与农田景观看得很直观。"
   },
@@ -213,7 +213,7 @@ const scenicSpots = [
     name: "布达拉宫",
     season: "春",
     province: "西藏",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Potala%20Palace%2C%20Lhasa%2C%20Tibet%2C%20China.JPG?width=960",
+    image: "./images/photos/potala-palace-lhasa.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Potala_Palace,_Lhasa,_Tibet,_China.JPG",
     note: "高原春光让建筑、山体与天空形成开阔层次，适合放入春末游观语境。"
   },
@@ -221,7 +221,7 @@ const scenicSpots = [
     name: "黄果树瀑布",
     season: "夏",
     province: "贵州",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Huangguoshu%20Fall%20Classic%20View.jpg?width=960",
+    image: "./images/photos/huangguoshu-fall.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Huangguoshu_Fall_Classic_View.jpg",
     note: "夏令水势充沛，瀑布声量与暑热、雨季、山地湿气相互呼应。"
   },
@@ -229,7 +229,7 @@ const scenicSpots = [
     name: "龙脊梯田山路",
     season: "夏",
     province: "广西",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Longji%20rice%20terraces%20in%20China.jpg?width=960",
+    image: "./images/photos/longji-rice-terraces-path.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Longji_rice_terraces_in_China.jpg",
     note: "梯田坡线和劳作路径能把芒种、小暑前后的田间节奏表现出来。"
   },
@@ -237,7 +237,7 @@ const scenicSpots = [
     name: "元阳哈尼梯田",
     season: "夏",
     province: "云南",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/1%20yuanyang%20county%20rice%20terrace%20bada%20view%202012.jpg?width=960",
+    image: "./images/photos/yuanyang-rice-terraces.jpg",
     source: "https://en.wikipedia.org/wiki/Honghe_Hani_Rice_Terraces",
     note: "水田镜面与山地农业相连，适合作为南方夏令农事图像。"
   },
@@ -245,7 +245,7 @@ const scenicSpots = [
     name: "喀纳斯湖",
     season: "秋",
     province: "新疆",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Kanas%20Lake%2C%20Altay%2C%20China%20%28Unsplash%29.jpg?width=960",
+    image: "./images/photos/kanas-lake-altay.jpg",
     source: "https://commons.wikimedia.org/wiki/Category:Lake_Kanas",
     note: "秋季湖色、林色与冷空气交叠，适合表现白露之后的清寒。"
   },
@@ -253,7 +253,7 @@ const scenicSpots = [
     name: "黄山雪景",
     season: "冬",
     province: "安徽",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Huangshan%20snow.jpg?width=960",
+    image: "./images/photos/huangshan-snow.jpg",
     source: "https://commons.wikimedia.org/wiki/Category:Huangshan_in_winter",
     note: "松石、云海与积雪形成冬季山水的层次，适合连接小雪、大雪。"
   },
@@ -261,9 +261,105 @@ const scenicSpots = [
     name: "哈尔滨冰雪大世界",
     season: "冬",
     province: "黑龙江",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Ice%20Snow%20World.jpg?width=960",
+    image: "./images/photos/ice-snow-world.jpg",
     source: "https://commons.wikimedia.org/wiki/File:Ice_Snow_World.jpg",
     note: "冰雕把严寒变成可游览的城市景观，让大寒不只是气温数字。"
+  },
+  {
+    name: "桃花初放",
+    season: "春",
+    province: "物候插图",
+    image: "./images/photos/spring-peach-blossom.jpg",
+    source: "./images/photos/spring-peach-blossom.jpg",
+    note: "桃花、春枝与轻暖气息适合表现惊蛰、春分前后的花信推进。"
+  },
+  {
+    name: "春日茶山",
+    season: "春",
+    province: "农事插图",
+    image: "./images/photos/spring-tea-terraces.jpg",
+    source: "./images/photos/spring-tea-terraces.jpg",
+    note: "茶垄和新绿把谷雨前后的采茶、雨水与晚春农事放在同一画面里。"
+  },
+  {
+    name: "柳雨春堤",
+    season: "春",
+    province: "江南物候",
+    image: "./images/photos/spring-willow-rain.jpg",
+    source: "./images/photos/spring-willow-rain.jpg",
+    note: "柳色、细雨和水岸适合补充雨水、清明一类潮湿明净的春令图像。"
+  },
+  {
+    name: "麦浪小满",
+    season: "夏",
+    province: "农田插图",
+    image: "./images/photos/summer-wheat-field.jpg",
+    source: "./images/photos/summer-wheat-field.jpg",
+    note: "麦穗渐满而未熟，能把小满、芒种之间的农事节奏讲得更直观。"
+  },
+  {
+    name: "林间蝉声",
+    season: "夏",
+    province: "物候插图",
+    image: "./images/photos/summer-cicada-woods.jpg",
+    source: "./images/photos/summer-cicada-woods.jpg",
+    note: "蝉鸣、浓荫和湿热空气适合表现小暑、大暑前后的盛夏感官。"
+  },
+  {
+    name: "荷塘雷雨",
+    season: "夏",
+    province: "水泽插图",
+    image: "./images/photos/summer-lotus-thunder.jpg",
+    source: "./images/photos/summer-lotus-thunder.jpg",
+    note: "荷叶、雷光与水面把暑热、阵雨和夏季植物繁盛放在一起。"
+  },
+  {
+    name: "晒秋场景",
+    season: "秋",
+    province: "收获民俗",
+    image: "./images/photos/autumn-harvest-drying.jpg",
+    source: "./images/photos/autumn-harvest-drying.jpg",
+    note: "晒秋能补充处暑、秋分之后的收获经验，让秋令不只停在山水色彩。"
+  },
+  {
+    name: "蒹葭白露",
+    season: "秋",
+    province: "水岸物候",
+    image: "./images/photos/autumn-reeds-white-dew.jpg",
+    source: "./images/photos/autumn-reeds-white-dew.jpg",
+    note: "芦苇和露珠适合连接白露、寒露的触感，也回应《诗经》里的秋水意象。"
+  },
+  {
+    name: "菊花秋圃",
+    season: "秋",
+    province: "花事插图",
+    image: "./images/photos/autumn-chrysanthemum-garden.jpg",
+    source: "./images/photos/autumn-chrysanthemum-garden.jpg",
+    note: "菊花、重阳与深秋出行相连，可补足寒露、霜降前后的花事线索。"
+  },
+  {
+    name: "雪中梅信",
+    season: "冬",
+    province: "岁寒物候",
+    image: "./images/photos/winter-plum-snow.jpg",
+    source: "./images/photos/winter-plum-snow.jpg",
+    note: "梅花和雪景把小寒、大寒的严冷转成可被记忆的岁末花信。"
+  },
+  {
+    name: "冰封河面",
+    season: "冬",
+    province: "北方寒候",
+    image: "./images/photos/winter-frozen-river.jpg",
+    source: "./images/photos/winter-frozen-river.jpg",
+    note: "冰裂、水面和远山适合表现小雪、大雪之后的寒候层次。"
+  },
+  {
+    name: "冬至圜丘",
+    season: "冬",
+    province: "礼制意象",
+    image: "./images/photos/winter-solstice-altar.jpg",
+    source: "./images/photos/winter-solstice-altar.jpg",
+    note: "圜丘、日影和寒色呼应冬至祭天，把天文节点转化为礼制空间。"
   }
 ];
 
@@ -297,6 +393,11 @@ const storyChapters = [
     subtitle: "月份、物候、政令、祭祀和禁忌被放在同一张时间表里。",
     season: "四时",
     icon: "scroll-text",
+    image: "./images/photos/classic-monthly-scroll.jpg",
+    imageAlt: "《月令》卷轴与月序插图",
+    imageNote: "卷轴、月序和格线强调《月令》把四时写成可执行的秩序。",
+    excerpt: "孟春之月，日在营室。",
+    plain: "这句把春季第一个月和天象位置放在一起，说明古人不是单看天气，而是用天文坐标组织月份、政令和农事。",
     summary: "《月令》的重要性不只在于记录季节，而在于它把季节变成可执行的社会秩序：何时劝农、何时修仓、何时祭祀、何时禁止砍伐，都跟天时相连。",
     points: ["孟仲季三月结构", "政令与农事同表", "礼制化的季节观"],
     details: [
@@ -320,6 +421,11 @@ const storyChapters = [
     subtitle: "二十四节气的核心，是太阳周年运动造成的寒暑与昼夜变化。",
     season: "全年",
     icon: "orbit",
+    image: "./images/photos/classic-star-map.jpg",
+    imageAlt: "星图与太阳周年运动插图",
+    imageNote: "星点、弧线和黄道感帮助读者把节气重新放回天文坐标里。",
+    excerpt: "斗指子，则冬至。",
+    plain: "古人曾借北斗斗柄指向来标定冬至。今天讲节气，可以把这种观象授时转译为太阳年中的位置刻度。",
     summary: "节气看起来像农历内容，其实主要依据太阳位置。太阳黄经每运行十五度，对应一个节气，这也是为什么节气能较稳定地落在公历日期附近。",
     points: ["太阳黄经", "寒暑推移", "昼夜长短"],
     details: [
@@ -343,6 +449,11 @@ const storyChapters = [
     subtitle: "鸟兽、草木、雷声、露霜，都是古人记录时间的传感器。",
     season: "全年",
     icon: "leaf",
+    image: "./images/photos/classic-phenology-circles.jpg",
+    imageAlt: "七十二候物候观察插图",
+    imageNote: "花、叶、霜雪和谷物被放进同一张观察图，提示一节三候的细密变化。",
+    excerpt: "五日谓之候，三候谓之气。",
+    plain: "候是比节气更细的观察单位。把一个节气再拆成三段，就能记录花开、雷动、露凝这类渐变细节。",
     summary: "二十四节气每气再分三候，共七十二候。它们把宏观季节拆成更细的观察单位，让时间通过自然现象被看见、听见和触摸到。",
     points: ["一节三候", "物候观察", "地域差异"],
     details: [
@@ -366,6 +477,11 @@ const storyChapters = [
     subtitle: "清明连接了天气、踏青、祭扫、城市生活和家族记忆。",
     season: "春",
     icon: "book-open-text",
+    image: "./images/photos/along-river-qingming.jpg",
+    imageAlt: "清明城市生活图像",
+    imageNote: "清明的天气、出行与城市烟火，在图像里自然连到社会生活。",
+    excerpt: "清明时节雨纷纷。",
+    plain: "这句保留了人们对清明最熟悉的感受：湿润天气、出行路途和情绪记忆叠在一起，使节气长成节日。",
     summary: "清明本是春季节气，后来与寒食、上巳等习俗交织，逐渐形成扫墓、踏青、插柳、郊游并存的节日形态。",
     points: ["节气与节日重叠", "寒食与祭扫", "踏青游赏"],
     details: [
@@ -389,6 +505,11 @@ const storyChapters = [
     subtitle: "一个名字里同时藏着麦熟、收割、插秧和雨季。",
     season: "夏",
     icon: "wheat",
+    image: "./images/photos/summer-wheat-field.jpg",
+    imageAlt: "芒种麦浪农事插图",
+    imageNote: "麦穗和田间线条把“该收的收、该种的种”变成可见的农事节奏。",
+    excerpt: "时雨及芒种，四野皆插秧。",
+    plain: "芒种不是抽象日期，而是雨热同季下的劳动节拍：有的地方收麦，有的地方插秧，收与种同时赶路。",
     summary: "芒种处在初夏农事最紧密的阶段，北方麦类成熟，南方水稻移栽，收与种交错发生。",
     points: ["麦熟收割", "水稻移栽", "雨热同季"],
     details: [
@@ -412,6 +533,11 @@ const storyChapters = [
     subtitle: "最短白昼并不是终点，而是新一轮阳气回升的开始。",
     season: "冬",
     icon: "moon-star",
+    image: "./images/photos/winter-solstice-altar.jpg",
+    imageAlt: "冬至圜丘礼制插图",
+    imageNote: "冬日圜丘与低日影对应冬至，把天文转折落到礼制空间中。",
+    excerpt: "冬至阳生春又来。",
+    plain: "冬至不是寒冷的终点叙事，而是阳气回升的起点叙事。最短白昼之后，新的循环已经开始。",
     summary: "冬至在古代地位很高，因为它把天文转折、历法节点、祭天礼仪和民间饮食都聚集到一天。",
     points: ["昼短夜长", "一阳来复", "祭天与团聚"],
     details: [
@@ -435,6 +561,11 @@ const storyChapters = [
     subtitle: "春雨、夏荷、秋霜、冬雪，让节气从历法走进记忆。",
     season: "四时",
     icon: "book-open-text",
+    image: "./images/photos/winter-plum-snow.jpg",
+    imageAlt: "雪中梅花诗词意象",
+    imageNote: "梅花、雪色和枝影适合说明诗词怎样把季节保存为可反复阅读的意象。",
+    excerpt: "好雨知时节，当春乃发生。",
+    plain: "诗词把抽象节令转成感官记忆。读到雨声、花信、蝉鸣和雪夜，节气就不只是历法表格。",
     summary: "诗词并不负责解释节气原理，却负责保存季节经验。它把雨声、花信、蝉鸣、霜叶和雪夜变成可反复阅读的时间记忆。",
     points: ["春雨花信", "夏荷蝉声", "秋霜冬雪"],
     details: [
@@ -458,6 +589,11 @@ const storyChapters = [
     subtitle: "六十甲子记录循环，节气标定太阳年的节点。",
     season: "全年",
     icon: "calendar-search",
+    image: "./images/photos/classic-calendar-chart.jpg",
+    imageAlt: "干支与节气循环图",
+    imageNote: "表格、圆盘和二十四刻度提示干支循环与太阳年节点并行存在。",
+    excerpt: "中冬十一月甲子朔旦冬至。",
+    plain: "这类历法表述会同时出现月份、干支、朔日和节气，说明传统时间系统常把多套循环并排记录。",
     summary: "干支和节气常一起出现在传统历法中，但它们承担的任务不同。干支强调周期编号，节气强调太阳年中的气候节点。",
     points: ["天干地支", "六十甲子", "太阳年节点"],
     details: [

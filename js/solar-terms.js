@@ -2,9 +2,17 @@
 const { $, $$, mountChrome, termByName, termsBySeason } = window.SeasonApp;
 const { scenicSpots, seasons, solarTerms } = window.SeasonData;
 
+function visualsForSeason(seasonName) {
+  const pool = scenicSpots.filter((spot) => spot.season === seasonName);
+  const local = pool.filter((spot) => String(spot.source || "").startsWith("./"));
+  const sourced = pool.filter((spot) => !String(spot.source || "").startsWith("./"));
+  return [...local, ...sourced];
+}
+
 function imageForTerm(term, index = 0) {
-  const pool = scenicSpots.filter((spot) => spot.season === term.season);
-  return pool[index % Math.max(1, pool.length)] || {
+  const pool = visualsForSeason(term.season);
+  const visualIndex = pool.length ? index % pool.length : 0;
+  return pool[visualIndex] || {
     image: term.image,
     name: `${term.name}意象`,
     province: term.season,
@@ -55,7 +63,12 @@ function renderTermDetail() {
   if (!detail) return;
   const params = new URLSearchParams(location.search);
   const term = termByName(params.get("term") || "立春");
-  const related = scenicSpots.filter((spot) => spot.season === term.season).slice(0, 4);
+  const pool = visualsForSeason(term.season);
+  const seasonTerms = termsBySeason(term.season);
+  const termIndex = Math.max(0, seasonTerms.findIndex((item) => item.name === term.name));
+  const related = pool.length
+    ? Array.from({ length: Math.min(4, pool.length) }, (_, index) => pool[(termIndex + index) % pool.length])
+    : [];
   const hero = related[0] || { image: term.image, name: term.name };
   document.title = `${term.name} | 节气详情`;
   detail.innerHTML = `

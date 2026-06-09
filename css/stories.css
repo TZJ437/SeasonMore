@@ -338,6 +338,57 @@ body[data-page="stories"] {
   line-height: 1.8;
 }
 
+.reader-visual {
+  margin: 28px 0 0;
+}
+
+.reader-visual img {
+  width: 100%;
+  height: clamp(210px, 28vw, 340px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  object-fit: cover;
+  box-shadow: 0 12px 30px rgba(37, 45, 42, 0.08);
+}
+
+.reader-visual figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.reader-excerpt {
+  margin: 26px 0 0;
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--gold) 7%, transparent), transparent 58%),
+    color-mix(in srgb, var(--panel) 78%, transparent);
+}
+
+.reader-excerpt blockquote {
+  margin: 0;
+  color: color-mix(in srgb, var(--gold) 76%, var(--ink));
+  font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+  font-size: clamp(1.35rem, 2.8vw, 2.05rem);
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.reader-excerpt p:last-child {
+  margin: 16px 0 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.reader-excerpt p:last-child strong {
+  display: inline-block;
+  margin-right: 10px;
+  color: var(--red);
+}
+
 .reader-quote {
   position: relative;
   margin: 30px 0;

@@ -5,7 +5,9 @@ const {
   getGanzhiDay,
   getGanzhiYear,
   getNearbyTerm,
+  getSafeToday,
   mountChrome,
+  normalizeYear,
   termByName,
   termsBySeason
 } = window.SeasonApp;
@@ -40,11 +42,17 @@ function neighborTerms(seasonTerms, termName) {
   };
 }
 
+function parseInputDate(value) {
+  if (!value) return getSafeToday();
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isFinite(date.getTime()) ? date : getSafeToday();
+}
+
 function update() {
   const dateInput = $("#dateInput");
   const yearInput = $("#yearInput");
-  const date = dateInput.value ? new Date(`${dateInput.value}T00:00:00`) : new Date();
-  const year = Number(yearInput.value || date.getFullYear());
+  const date = parseInputDate(dateInput.value);
+  const year = normalizeYear(yearInput.value, date.getFullYear());
   const ganzhiYear = getGanzhiYear(year);
   const ganzhiDay = getGanzhiDay(date);
   const season = getCurrentSeason(date);
@@ -133,7 +141,7 @@ function update() {
 }
 
 function resetToday() {
-  const today = new Date();
+  const today = getSafeToday();
   $("#dateInput").value = dateInputValue(today);
   $("#yearInput").value = today.getFullYear();
   update();
