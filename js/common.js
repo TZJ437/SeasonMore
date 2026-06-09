@@ -121,7 +121,7 @@ function icon(name) {
   return `<svg class="local-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths[name] || paths.images}</svg>`;
 }
 
-function fallbackImage(label = "四时中国") {
+function fallbackImage(label = "季节的旋律") {
   const safeLabel = String(label).replace(/[<>&"']/g, "");
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620">
@@ -148,7 +148,7 @@ function installImageFallbacks() {
   const applyFallback = (image) => {
     if (!(image instanceof HTMLImageElement) || image.dataset.fallbackApplied) return;
     image.dataset.fallbackApplied = "true";
-    image.src = fallbackImage(image.alt || "四时中国");
+    image.src = fallbackImage(image.alt || "季节的旋律");
   };
 
   const watchImage = (image) => {
@@ -178,20 +178,290 @@ function installImageFallbacks() {
   }).observe(document.documentElement, { childList: true, subtree: true });
 }
 
+const pageCleanups = [];
+const documentSessionId = (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`).replace(/[^\w-]/g, "");
+const loadedScriptUrls = new Set(Array.from(document.scripts, (script) => script.src).filter(Boolean));
+const scriptLoadPromises = new Map();
+const pageHtmlCache = new Map();
+let routeWarmupScheduled = false;
+let navigationController = null;
+let navigationToken = 0;
+let chromeListenersInstalled = false;
+
+function addPageCleanup(cleanup) {
+  if (typeof cleanup === "function") pageCleanups.push(cleanup);
+}
+
+function runPageCleanups() {
+  while (pageCleanups.length) {
+    const cleanup = pageCleanups.pop();
+    try {
+      cleanup();
+    } catch (error) {
+      console.warn("Page cleanup failed", error);
+    }
+  }
+}
+
+function scrollToTarget(id, options = {}) {
+  const target = document.getElementById(id);
+  if (!target) return false;
+  const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-height"), 10) || 72;
+  const top = target.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+  window.scrollTo({ top: Math.max(0, top), behavior: options.instant ? "auto" : "smooth" });
+  target.setAttribute("tabindex", "-1");
+  window.setTimeout(() => target.focus({ preventScroll: true }), options.instant ? 80 : 320);
+  return true;
+}
+
+function isHttpUrl(url) {
+  const protocol = typeof url === "string" ? url : url.protocol;
+  return protocol === "http:" || protocol === "https:";
+}
+
+function canUseClientNavigation(url = window.location) {
+  return isHttpUrl(url) || url.protocol === "file:";
+}
+
+function isLocalHtmlUrl(url) {
+  return url.origin === window.location.origin && /\.(html|htm)$/i.test(url.pathname);
+}
+
+function assetUrlFrom(node, attr, baseUrl) {
+  const value = node.getAttribute(attr);
+  if (!value) return "";
+  return new URL(value, baseUrl).href;
+}
+
+function isPersistentStylesheet(href) {
+  const pathname = new URL(href).pathname;
+  return /\/css\/(?:common|unified)\.css$/i.test(pathname);
+}
+
+function hasStylesheet(href) {
+  return $$('link[rel~="stylesheet"]').some((link) => link.href === href);
+}
+
+function loadStylesheets(nextDocument, baseUrl) {
+  const stylesheets = $$('link[rel~="stylesheet"]', nextDocument)
+    .map((link) => assetUrlFrom(link, "href", baseUrl))
+    .filter(Boolean);
+
+  const nextSet = new Set(stylesheets);
+  const unifiedLink = $$('link[rel~="stylesheet"]').find((link) => /\/css\/unified\.css$/i.test(new URL(link.href).pathname));
+  const waitFor = stylesheets.filter((href) => !hasStylesheet(href)).map((href) => new Promise((resolve) => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.addEventListener("load", resolve, { once: true });
+    link.addEventListener("error", resolve, { once: true });
+    document.head.insertBefore(link, unifiedLink || null);
+    window.setTimeout(resolve, 900);
+  }));
+
+  return Promise.all(waitFor).then(() => {
+    $$('link[rel~="stylesheet"]').forEach((link) => {
+      if (!isPersistentStylesheet(link.href) && !nextSet.has(link.href)) link.remove();
+    });
+  });
+}
+
+function parseHtml(html) {
+  return new DOMParser().parseFromString(html, "text/html");
+}
+
+function loadScript(src) {
+  if (!src || loadedScriptUrls.has(src)) return Promise.resolve();
+  if (scriptLoadPromises.has(src)) return scriptLoadPromises.get(src);
+  if (Array.from(document.scripts).some((script) => script.src === src)) {
+    loadedScriptUrls.add(src);
+    return Promise.resolve();
+  }
+  const promise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.defer = true;
+    script.addEventListener("load", () => {
+      loadedScriptUrls.add(src);
+      scriptLoadPromises.delete(src);
+      resolve();
+    }, { once: true });
+    script.addEventListener("error", () => {
+      scriptLoadPromises.delete(src);
+      reject(new Error(`Unable to load ${src}`));
+    }, { once: true });
+    document.body.appendChild(script);
+  });
+  scriptLoadPromises.set(src, promise);
+  return promise;
+}
+
+async function loadPageScripts(nextDocument, baseUrl) {
+  const scripts = $$("script[src]", nextDocument)
+    .map((script) => assetUrlFrom(script, "src", baseUrl))
+    .filter(Boolean)
+    .filter((src) => !/\/js\/(?:data|common)\.js$/i.test(new URL(src).pathname));
+
+  for (const src of scripts) {
+    await loadScript(src);
+  }
+}
+
+function swapPage(nextDocument) {
+  const nextMain = $("main", nextDocument);
+  const currentMain = $("main");
+  if (!nextMain || !currentMain) throw new Error("Target page does not contain a main element.");
+
+  document.title = nextDocument.title || document.title;
+  document.body.dataset.page = nextDocument.body.dataset.page || document.body.dataset.page || "home";
+  document.body.className = nextDocument.body.className;
+  currentMain.replaceWith(nextMain);
+}
+
+function loadFilePage(url, signal) {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new DOMException("Navigation aborted", "AbortError"));
+      return;
+    }
+
+    const frame = document.createElement("iframe");
+    let settled = false;
+
+    const cleanup = () => {
+      signal?.removeEventListener("abort", abort);
+      frame.remove();
+    };
+    const settle = (callback, value) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      callback(value);
+    };
+    const abort = () => settle(reject, new DOMException("Navigation aborted", "AbortError"));
+
+    frame.setAttribute("aria-hidden", "true");
+    frame.setAttribute("sandbox", "allow-same-origin");
+    frame.style.cssText = "position:fixed;left:-9999px;top:0;width:1px;height:1px;border:0;opacity:0;pointer-events:none;";
+    frame.addEventListener("load", () => {
+      try {
+        const frameDocument = frame.contentDocument;
+        if (!frameDocument?.querySelector("main")) {
+          throw new Error("Target page does not contain readable content.");
+        }
+        const html = `<!doctype html>${frameDocument.documentElement.outerHTML}`;
+        settle(resolve, new DOMParser().parseFromString(html, "text/html"));
+      } catch (error) {
+        settle(reject, error);
+      }
+    }, { once: true });
+    frame.addEventListener("error", () => {
+      settle(reject, new Error(`Unable to load ${url.pathname}`));
+    }, { once: true });
+    signal?.addEventListener("abort", abort, { once: true });
+
+    document.body.appendChild(frame);
+    frame.src = url.href;
+  });
+}
+
+async function fetchPage(url, signal) {
+  if (pageHtmlCache.has(url.href)) {
+    return parseHtml(pageHtmlCache.get(url.href));
+  }
+
+  if (url.protocol === "file:") {
+    const nextDocument = await loadFilePage(url, signal);
+    pageHtmlCache.set(url.href, `<!doctype html>${nextDocument.documentElement.outerHTML}`);
+    return parseHtml(pageHtmlCache.get(url.href));
+  }
+
+  const response = await fetch(url.href, { signal });
+  if (!response.ok) throw new Error(`Unable to fetch ${url.pathname}`);
+  const html = await response.text();
+  pageHtmlCache.set(url.href, html);
+  return parseHtml(html);
+}
+
+function scheduleRouteWarmup() {
+  if (routeWarmupScheduled || !canUseClientNavigation()) return;
+  routeWarmupScheduled = true;
+
+  const run = () => {
+    const urls = Array.from(document.querySelectorAll("a[href]"))
+      .map((link) => {
+        try {
+          return new URL(link.getAttribute("href"), window.location.href);
+        } catch {
+          return null;
+        }
+      })
+      .filter((url) => url && isLocalHtmlUrl(url) && url.href !== window.location.href);
+
+    const uniqueUrls = Array.from(new Map(urls.map((url) => [url.href, url])).values());
+    uniqueUrls.forEach((url) => {
+      fetchPage(url)
+        .then((nextDocument) => loadPageScripts(nextDocument, url.href))
+        .catch(() => {});
+    });
+  };
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(run, { timeout: 1800 });
+  } else {
+    window.setTimeout(run, 900);
+  }
+}
+
+async function navigateToPage(url, options = {}) {
+  if (!canUseClientNavigation(url)) {
+    window.location.assign(url.href);
+    return;
+  }
+
+  navigationController?.abort();
+  navigationController = new AbortController();
+  const token = ++navigationToken;
+  document.documentElement.classList.add("page-loading");
+
+  try {
+    const nextDocument = await fetchPage(url, navigationController.signal);
+    if (token !== navigationToken) return;
+    await loadStylesheets(nextDocument, url.href);
+    await loadPageScripts(nextDocument, url.href);
+    if (token !== navigationToken) return;
+
+    runPageCleanups();
+    if (options.replace) {
+      window.history.replaceState({ seasonClientPage: true }, "", url.href);
+    } else {
+      window.history.pushState({ seasonClientPage: true }, "", url.href);
+    }
+    swapPage(nextDocument);
+    await bootPage({ cleanup: false });
+
+    if (url.hash) {
+      window.setTimeout(() => scrollToTarget(decodeURIComponent(url.hash.slice(1))), 80);
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      console.warn("Client navigation failed; falling back to full navigation.", error);
+      window.location.assign(url.href);
+    }
+  } finally {
+    if (token === navigationToken) {
+      document.documentElement.classList.remove("page-loading", "page-leaving");
+      document.documentElement.classList.add("page-ready");
+    }
+  }
+}
+
 function setupPageTransitions() {
   if (document.documentElement.dataset.pageTransitions === "ready") return;
   document.documentElement.dataset.pageTransitions = "ready";
-
-  const scrollToTarget = (id) => {
-    const target = document.getElementById(id);
-    if (!target) return false;
-    const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-height"), 10) || 72;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
-    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-    target.setAttribute("tabindex", "-1");
-    window.setTimeout(() => target.focus({ preventScroll: true }), 320);
-    return true;
-  };
+  document.documentElement.dataset.documentSessionId = documentSessionId;
 
   document.addEventListener("click", (event) => {
     const scrollButton = event.target.closest("[data-scroll-target]");
@@ -223,44 +493,61 @@ function setupPageTransitions() {
       return;
     }
 
-    const isLocalHtml = url.origin === window.location.origin && /\.(html|htm)$/i.test(url.pathname);
-    if (!isLocalHtml) return;
+    if (!isLocalHtmlUrl(url)) return;
 
+    event.preventDefault();
     if (url.href === window.location.href) {
-      event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    navigateToPage(url);
+  });
 
-    event.preventDefault();
-    document.documentElement.classList.add("page-leaving");
-    window.setTimeout(() => {
-      window.location.assign(href);
-    }, 170);
+  window.addEventListener("popstate", () => {
+    const url = new URL(window.location.href);
+    if (isLocalHtmlUrl(url)) navigateToPage(url, { replace: true });
   });
 
   const markReady = () => {
-    document.documentElement.classList.remove("page-leaving");
+    document.documentElement.classList.remove("page-loading", "page-leaving");
     document.documentElement.classList.add("page-ready");
   };
 
   window.addEventListener("pageshow", markReady);
   markReady();
+  scheduleRouteWarmup();
+
+  if (window.history?.replaceState && window.history.state?.seasonClientPage !== true) {
+    window.history.replaceState({ seasonClientPage: true }, "", window.location.href);
+  }
 
   if (window.location.hash) {
     const id = decodeURIComponent(window.location.hash.slice(1));
     window.setTimeout(() => {
       if (scrollToTarget(id) && window.history?.replaceState) {
-        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+        window.history.replaceState(window.history.state, "", `${window.location.pathname}${window.location.search}`);
       }
     }, 80);
   }
 }
 
+function syncHeaderHeight() {
+  const header = $(".site-header");
+  if (!header) return;
+  document.documentElement.style.setProperty("--header-height", `${header.offsetHeight}px`);
+}
+
+function updateHeader() {
+  $(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
+  syncHeaderHeight();
+}
+
 function mountChrome() {
+  const wasMounted = document.documentElement.classList.contains("nav-mounted");
+
   $("#appHeader").innerHTML = `
     <header class="site-header">
-      <a class="brand" href="index.html"><span>时</span><strong>四时中国</strong></a>
+      <a class="brand" href="index.html"><span>季</span><strong>季节的旋律</strong></a>
       <nav class="site-nav" aria-label="主导航">
         <a data-page="home" href="index.html">首页</a>
         <a data-page="seasons" href="seasons.html">四季</a>
@@ -294,18 +581,18 @@ function mountChrome() {
     link.classList.toggle("active", active);
     if (active) {
       link.setAttribute("aria-current", "page");
-      link.dataset.href = link.getAttribute("href") || "";
-      link.removeAttribute("href");
+    } else {
+      link.removeAttribute("aria-current");
     }
   });
 
-  document.documentElement.classList.remove("nav-mounted", "nav-entering");
-  window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(() => {
-      document.documentElement.classList.add("nav-mounted", "nav-entering");
-      window.setTimeout(() => document.documentElement.classList.remove("nav-entering"), 680);
-    });
-  });
+  document.documentElement.classList.add("nav-mounted");
+  if (!wasMounted) {
+    document.documentElement.classList.add("nav-entering");
+    window.setTimeout(() => document.documentElement.classList.remove("nav-entering"), 680);
+  } else {
+    document.documentElement.classList.remove("nav-entering");
+  }
 
   $("#themeToggle")?.addEventListener("click", (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -324,19 +611,14 @@ function mountChrome() {
   installImageFallbacks();
   setupPageTransitions();
 
-  const syncHeaderHeight = () => {
-    const header = $(".site-header");
-    if (!header) return;
-    document.documentElement.style.setProperty("--header-height", `${header.offsetHeight}px`);
-  };
-  const updateHeader = () => {
-    $(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
-    syncHeaderHeight();
-  };
   syncHeaderHeight();
   updateHeader();
-  window.addEventListener("scroll", updateHeader, { passive: true });
-  window.addEventListener("resize", syncHeaderHeight);
+
+  if (!chromeListenersInstalled) {
+    chromeListenersInstalled = true;
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    window.addEventListener("resize", syncHeaderHeight);
+  }
 }
 
 function imageForTerm(term, index = 0) {
@@ -958,7 +1240,7 @@ function setupSeasonHero() {
   cancelAnimationFrame(rafId);
   tick();
 
-  board.addEventListener("click", (event) => {
+  const handleBoardClick = (event) => {
     const burstButton = event.target.closest("button[data-season-burst]");
     if (burstButton) {
       triggerSeasonBurst(burstButton.dataset.seasonBurst, burstButton);
@@ -967,12 +1249,22 @@ function setupSeasonHero() {
 
     const button = event.target.closest("button[data-season]");
     if (button) triggerSeasonBurst(button.dataset.season, button);
-  });
-  board.addEventListener("pointerover", (event) => {
+  };
+
+  const handleBoardPointerOver = (event) => {
     const button = event.target.closest("button[data-season]");
     if (button) applySeason(button.dataset.season);
-  });
+  };
+
+  board.addEventListener("click", handleBoardClick);
+  board.addEventListener("pointerover", handleBoardPointerOver);
   window.addEventListener("resize", resize);
+  addPageCleanup(() => {
+    cancelAnimationFrame(rafId);
+    board.removeEventListener("click", handleBoardClick);
+    board.removeEventListener("pointerover", handleBoardPointerOver);
+    window.removeEventListener("resize", resize);
+  });
 }
 
 function renderHome() {
@@ -1429,10 +1721,32 @@ function renderGanzhiPage() {
   update();
 }
 
+async function bootPage(options = {}) {
+  if (options.cleanup !== false) runPageCleanups();
+
+  const page = document.body.dataset.page || "home";
+  const path = window.location.pathname;
+  if (page === "home") renderHome();
+  else if (page === "seasons") renderSeasons();
+  else if (page === "principles") mountChrome();
+  else if (page === "terms" && /term-detail\.html$/i.test(path)) window.SeasonApp.renderTermDetailPage?.();
+  else if (page === "terms") window.SeasonApp.renderSolarTermsPage?.();
+  else if (page === "stories") renderStoriesPage();
+  else if (page === "ganzhi") renderGanzhiPage();
+  else if (page === "calculator") window.SeasonApp.renderCalculatorPage?.();
+  else if (page === "quiz") window.SeasonApp.renderQuizPage?.();
+  else mountChrome();
+
+  syncHeaderHeight();
+  updateHeader();
+}
 
 window.SeasonApp = {
   $,
   $$,
+  addPageCleanup,
+  bootPage,
+  documentSessionId,
   getCurrentSeason,
   getGanzhiDay,
   getGanzhiYear,
@@ -1444,6 +1758,7 @@ window.SeasonApp = {
   renderHome,
   renderSeasons,
   renderStoriesPage,
+  runPageCleanups,
   termByName,
   termsBySeason
 };

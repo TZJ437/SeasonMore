@@ -147,11 +147,15 @@ function resetToday() {
   update();
 }
 
-mountChrome();
-resetToday();
-$("#queryForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  update();
-});
-$("#todayButton").addEventListener("click", resetToday);
+function renderCalculatorPage() {
+  mountChrome();
+  resetToday();
+  $("#queryForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    update();
+  });
+  $("#todayButton").addEventListener("click", resetToday);
+}
+
+Object.assign(window.SeasonApp, { renderCalculatorPage });
 })();

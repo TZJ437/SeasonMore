@@ -1,5 +1,5 @@
 (() => {
-const { $, mountChrome } = window.SeasonApp;
+const { $, addPageCleanup, mountChrome } = window.SeasonApp;
 const { quizQuestions, scenicSpots, seasons } = window.SeasonData;
 
 const praisePoems = [
@@ -12,7 +12,7 @@ const praisePoems = [
 
 const modes = [
   { key: "quiz", label: "问答", title: "节气快问", text: "先校准核心概念。", step: "01" },
-  { key: "puzzle", label: "拼图", title: "四时拼图", text: "用图像进入四季。", step: "02" },
+  { key: "puzzle", label: "拼图", title: "季节拼图", text: "用图像进入四季。", step: "02" },
   { key: "poem", label: "诗句", title: "诗句补全", text: "从意象认出季节。", step: "03" },
   { key: "match", label: "配对", title: "节气配对", text: "把节气放回季节。", step: "04" },
   { key: "sort", label: "排序", title: "春令排序", text: "理清先后顺序。", step: "05" },
@@ -82,6 +82,23 @@ let puzzleSkipped = false;
 let puzzleCompleted = false;
 let puzzleAnnounced = false;
 let puzzleTarget = null;
+let activeMountId = 0;
+const timeouts = new Set();
+
+function schedule(callback, delay) {
+  const mountId = activeMountId;
+  const id = window.setTimeout(() => {
+    timeouts.delete(id);
+    if (mountId === activeMountId) callback();
+  }, delay);
+  timeouts.add(id);
+  return id;
+}
+
+function clearPageTimers() {
+  timeouts.forEach((id) => window.clearTimeout(id));
+  timeouts.clear();
+}
 
 function shuffle(list) {
   const copy = [...list];
@@ -272,16 +289,16 @@ function renderPuzzle() {
   const image = puzzleTarget?.image || puzzleTiles[0]?.image || "";
   const completeMessage = puzzleSkipped
     ? "已跳过，参考图已经展开"
-    : "拼图完成，四时图像归位";
+    : "拼图完成，季节图像归位";
   $("#gameArea").innerHTML = gameShell(
-    "四时拼图",
-    complete ? completeMessage : `交换两块碎片，拼回${puzzleTarget?.season || "四时"}令`,
+    "季节拼图",
+    complete ? completeMessage : `交换两块碎片，拼回${puzzleTarget?.season || "季节"}令`,
     `
       <div class="puzzle-board-layout ${complete ? "is-complete" : ""}">
         <figure class="puzzle-reference">
           <img src="${image}" alt="${puzzleTarget?.title || "拼图参考图"}">
           <figcaption>
-            <strong>${puzzleTarget?.title || "四时参考图"}</strong>
+            <strong>${puzzleTarget?.title || "季节参考图"}</strong>
             <span>${puzzleTarget?.note || "观察参考图，再把碎片拼回原位。"}</span>
           </figcaption>
         </figure>
@@ -329,7 +346,7 @@ function renderPuzzle() {
   });
   if (complete && !puzzleSkipped && !puzzleAnnounced) {
     puzzleAnnounced = true;
-    announce("拼图完成", `你用了 ${puzzleMoves} 次交换完成“${puzzleTarget?.title || "四时拼图"}”。`);
+    announce("拼图完成", `你用了 ${puzzleMoves} 次交换完成“${puzzleTarget?.title || "季节拼图"}”。`);
   }
 }
 
@@ -432,7 +449,7 @@ function renderGame() {
 }
 
 function nextPoem() {
-  window.setTimeout(() => {
+  schedule(() => {
     poemIndex += 1;
     if (poemIndex >= poemQuestions.length) finishPoem();
     else renderPoem();
@@ -446,7 +463,7 @@ function handleQuiz(button) {
   const picked = Number(button.dataset.answer);
   if (picked === answer) score += 1;
   button.classList.add(picked === answer ? "correct" : "wrong");
-  window.setTimeout(() => {
+  schedule(() => {
     questionIndex += 1;
     if (questionIndex >= quizQuestions.length) finishQuiz();
     else renderQuestion();
@@ -509,7 +526,7 @@ function handleMatch(button) {
   } else {
     button.classList.add("wrong");
     selected.classList.add("wrong");
-    window.setTimeout(() => {
+    schedule(() => {
       button.classList.remove("wrong");
       selected?.classList.remove("wrong", "selected");
       selected = null;
@@ -534,7 +551,7 @@ function handleSort(button) {
   }
   button.classList.add("wrong");
   $("#sortResult").textContent = `顺序不对，下一位应是：${expected}`;
-  window.setTimeout(() => button.classList.remove("wrong"), 420);
+  schedule(() => button.classList.remove("wrong"), 420);
 }
 
 function handleMemory(button) {
@@ -559,7 +576,7 @@ function handleMemory(button) {
   }
   first.classList.add("wrong");
   second.classList.add("wrong");
-  window.setTimeout(() => {
+  schedule(() => {
     memoryOpen.forEach((card) => {
       card.classList.remove("selected", "wrong");
       card.querySelector("span").textContent = "?";
@@ -568,26 +585,41 @@ function handleMemory(button) {
   }, 680);
 }
 
-mountChrome();
-resetMode();
+function renderQuizPage() {
+  clearPageTimers();
+  activeMountId += 1;
+  const mountId = activeMountId;
+  mountChrome();
+  resetMode();
 
-$("#quizBox").addEventListener("click", (event) => {
-  const tab = event.target.closest("button[data-mode]");
-  if (tab) {
-    resetMode(tab.dataset.mode);
-    return;
-  }
-  const answer = event.target.closest("button[data-answer]");
-  if (answer) handleQuiz(answer);
-  const puzzle = event.target.closest("button[data-puzzle]");
-  if (puzzle) handlePuzzle(puzzle);
-  const poem = event.target.closest("button[data-poem]");
-  if (poem) handlePoem(poem);
-  const match = event.target.closest("button[data-match]");
-  if (match) handleMatch(match);
-  const sort = event.target.closest("button[data-sort]");
-  if (sort) handleSort(sort);
-  const memory = event.target.closest("button[data-pair]");
-  if (memory) handleMemory(memory);
-});
+  const quizBox = $("#quizBox");
+  if (!quizBox) return;
+
+  quizBox.addEventListener("click", (event) => {
+    const tab = event.target.closest("button[data-mode]");
+    if (tab) {
+      resetMode(tab.dataset.mode);
+      return;
+    }
+    const answer = event.target.closest("button[data-answer]");
+    if (answer) handleQuiz(answer);
+    const puzzle = event.target.closest("button[data-puzzle]");
+    if (puzzle) handlePuzzle(puzzle);
+    const poem = event.target.closest("button[data-poem]");
+    if (poem) handlePoem(poem);
+    const match = event.target.closest("button[data-match]");
+    if (match) handleMatch(match);
+    const sort = event.target.closest("button[data-sort]");
+    if (sort) handleSort(sort);
+    const memory = event.target.closest("button[data-pair]");
+    if (memory) handleMemory(memory);
+  });
+
+  addPageCleanup(() => {
+    if (activeMountId === mountId) activeMountId += 1;
+    clearPageTimers();
+  });
+}
+
+Object.assign(window.SeasonApp, { renderQuizPage });
 })();

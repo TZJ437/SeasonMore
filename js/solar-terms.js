@@ -96,8 +96,19 @@ function renderTermDetail() {
   `;
 }
 
-mountChrome();
-renderFilters();
-renderTermGallery();
-renderTermDetail();
+function renderSolarTermsPage() {
+  mountChrome();
+  renderFilters();
+  renderTermGallery();
+}
+
+function renderTermDetailPage() {
+  mountChrome();
+  renderTermDetail();
+}
+
+Object.assign(window.SeasonApp, {
+  renderSolarTermsPage,
+  renderTermDetailPage
+});
 })();
