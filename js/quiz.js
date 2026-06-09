@@ -113,6 +113,25 @@ function pickPraise() {
   return praisePoems[Math.floor(Math.random() * praisePoems.length)];
 }
 
+function resolveAssetUrl(path) {
+  try {
+    return new URL(path, document.baseURI).href;
+  } catch {
+    return path;
+  }
+}
+
+function escapeAttribute(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+function cssImageUrl(path) {
+  return `url("${resolveAssetUrl(path).replace(/["\\]/g, "\\$&")}")`;
+}
+
 function announce(message, detail = "") {
   const target = $("#gameReward");
   if (!target) return;
@@ -287,6 +306,8 @@ function renderPuzzle() {
   const complete = puzzleTiles.every((tile, index) => tile.id === index);
   puzzleCompleted = complete;
   const image = puzzleTarget?.image || puzzleTiles[0]?.image || "";
+  const imageUrl = resolveAssetUrl(image);
+  const puzzleImage = cssImageUrl(image);
   const completeMessage = puzzleSkipped
     ? "已跳过，参考图已经展开"
     : "拼图完成，季节图像归位";
@@ -296,14 +317,14 @@ function renderPuzzle() {
     `
       <div class="puzzle-board-layout ${complete ? "is-complete" : ""}">
         <figure class="puzzle-reference">
-          <img src="${image}" alt="${puzzleTarget?.title || "拼图参考图"}">
+          <img src="${escapeAttribute(imageUrl)}" alt="${puzzleTarget?.title || "拼图参考图"}">
           <figcaption>
             <strong>${puzzleTarget?.title || "季节参考图"}</strong>
             <span>${puzzleTarget?.note || "观察参考图，再把碎片拼回原位。"}</span>
           </figcaption>
         </figure>
         <div class="puzzle-play-area">
-          <div class="puzzle-wrap" style="--puzzle-image:url('${image}')">
+          <div class="puzzle-wrap" style="--puzzle-image:${escapeAttribute(puzzleImage)}">
             ${puzzleTiles.map((tile, index) => `
               <button class="puzzle-tile ${puzzleSelected === index ? "selected" : ""}" type="button" data-puzzle="${index}" ${complete ? "disabled" : ""} style="--tile-x:${tile.id % 3};--tile-y:${Math.floor(tile.id / 3)}">
                 <span>${tile.label}</span>
